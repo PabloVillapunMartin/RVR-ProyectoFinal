@@ -8,11 +8,11 @@ class Manager;
 class SDLGame;
 class RenderSystem;
 
-class PiumPiumMaster {
+class PiumPiumMasterClient {
 
 public:
-	PiumPiumMaster();
-	virtual ~PiumPiumMaster();
+	PiumPiumMasterClient();
+	virtual ~PiumPiumMasterClient();
 
 	// from SDLGame
 	void start();
@@ -21,16 +21,13 @@ public:
 private:
 	void initGame();
 	void closeGame();
-
-	void clientGame();
-	void serverGame();
+    bool checkInput();
 
 	SDLGame *game_;
 	Manager *mngr_;
 	bool exit_;
+    int clientId_;
 
-
-	CollisionSystem *collisionSystem_;
 	RenderSystem *renderSystem_;
 
 	const static int _WINDOW_WIDTH_ = 640;

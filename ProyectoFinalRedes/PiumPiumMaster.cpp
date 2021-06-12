@@ -23,6 +23,8 @@ PiumPiumMaster::~PiumPiumMaster() {
 	closeGame();
 }
 
+
+
 void PiumPiumMaster::initGame() {
 
 	game_ = SDLGame::init("PiumPiumMaster", _WINDOW_WIDTH_, _WINDOW_HEIGHT_);
