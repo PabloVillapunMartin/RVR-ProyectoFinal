@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-
+#include "Network.h"
 
 class CollisionSystem;
 class Manager;
@@ -15,7 +15,7 @@ public:
 	virtual ~PiumPiumMaster();
 
 	// from SDLGame
-	void start();
+	void start(char* mode, char* ip, char* port);
 	void stop();
 
 private:
@@ -28,7 +28,8 @@ private:
 	SDLGame *game_;
 	Manager *mngr_;
 	bool exit_;
-
+	NetworkServer* net_server;
+	NetworkClient* net_client;
 
 	CollisionSystem *collisionSystem_;
 	RenderSystem *renderSystem_;

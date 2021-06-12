@@ -52,6 +52,9 @@
         "chrono": "cpp",
         "list": "cpp",
         "ratio": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "condition_variable": "cpp",
+        "cstring": "cpp",
+        "mutex": "cpp"
     }
 }

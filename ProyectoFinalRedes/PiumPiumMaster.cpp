@@ -1,6 +1,7 @@
 #include "PiumPiumMaster.h"
 
 #include <assert.h>
+#include <string.h>
 
 #include "ImageComponent.h"
 #include "Transform.h"
@@ -54,9 +55,19 @@ void PiumPiumMaster::closeGame() {
 	delete mngr_;
 }
 
-void PiumPiumMaster::start() {
+void PiumPiumMaster::start(char* mode, char* ip, char* port) {
 	exit_ = false;
 	auto ih = InputHandler::instance();
+	
+	std::string _mode = mode;
+	if(_mode == "server"){
+		net_server = new NetworkServer(ip, port);
+		net_server->start();
+	}
+	else{
+		net_client = new NetworkClient(ip, port);
+		net_client->start();
+	} 
 
 	//Entity* e = mngr_->addEntity();
 	//e->addComponent<ImageComponent*>(ecs::ImageComponent);

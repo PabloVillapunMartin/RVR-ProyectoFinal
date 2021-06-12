@@ -4,15 +4,20 @@
 
 using namespace std;
 
-void start() {
+void start(char* mode, char* ip, char* port) {
 	PiumPiumMaster g;
-	g.start();
+	g.start(mode, ip, port);
 }
 
 int main(int ac, char **av) {
 
+	if(ac != 4){
+		cout << "Args usage: server/client, IP, port\n";
+		return 1;
+	}
+
 	try {
-		start();
+		start(av[1], av[2], av[3]);
 	} catch (std::string &e) { // catch errors thrown as strings
 		cerr << e << endl;
 	} catch (const char *e) { // catch errors thrown as char*
