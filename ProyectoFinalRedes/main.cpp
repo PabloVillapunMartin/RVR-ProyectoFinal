@@ -1,12 +1,25 @@
 #include <iostream>
 
-#include "PiumPiumMaster.h"
+#include "PiumPiumMasterServer.h"
+#include "PiumPiumMasterClient.h"
 
 using namespace std;
-
+// +------------------------------------------------------------------*
+// |  mode = server si servidor, nombre del cliente en caso de client |
+// |  ip = ip del servidor                                            |
+// |  port = ip del servidor                                          |
+// +------------------------------------------------------------------*
 void start(char* mode, char* ip, char* port) {
-	PiumPiumMaster g;
-	g.start(mode, ip, port);
+	std::string mode_ = mode;
+
+	if(mode_ == "server"){
+		PiumPiumMasterServer g;
+		g.start(ip, port);
+	}
+	else{
+		PiumPiumMasterClient g;
+		g.start(ip, port, mode);
+	}
 }
 
 int main(int ac, char **av) {

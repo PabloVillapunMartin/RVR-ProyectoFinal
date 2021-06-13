@@ -16,7 +16,7 @@ int NetworkMessage::from_bin(char* obj){
 	return 0;
 }
 
-void TestingMessage::to_bin(){
+void ConfirmationLoginMessage::to_bin(){
 	int messageSize = sizeof(MsgId) + sizeof(int);
 
 	alloc_data(messageSize);
@@ -28,10 +28,10 @@ void TestingMessage::to_bin(){
 	memcpy(bufferPointer, &id, sizeof(MsgId));
 	bufferPointer += sizeof(MsgId);
 
-	memcpy(bufferPointer, &win, sizeof(int));
+	memcpy(bufferPointer, &gameObjectID, sizeof(int));
 }
 
-int TestingMessage::from_bin(char* obj){
+int ConfirmationLoginMessage::from_bin(char* obj){
 	int messageSize = sizeof(MsgId) + sizeof(int);
 	
 	alloc_data(messageSize);
@@ -43,7 +43,81 @@ int TestingMessage::from_bin(char* obj){
 	memcpy(&id, bufferPointer, sizeof(MsgId));
 	bufferPointer += sizeof(MsgId);
 
-	memcpy(&win, bufferPointer, sizeof(int));
+	memcpy(&gameObjectID, bufferPointer, sizeof(int));
+
+	return 0;
+}
+
+void StartGameMessage::to_bin(){
+	int messageSize = sizeof(MsgId) + (8 * sizeof(int));
+
+	alloc_data(messageSize);
+
+	memset(_data, 0, messageSize);
+
+	char* bufferPointer = _data;
+
+	memcpy(bufferPointer, &id, sizeof(MsgId));
+	bufferPointer += sizeof(MsgId);
+
+	memcpy(bufferPointer, &x1, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &y1, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &x2, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &y2, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &x3, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &y3, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &x4, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &y4, sizeof(int));
+}
+
+int StartGameMessage::from_bin(char* obj){
+	int messageSize = sizeof(MsgId) + (8 * sizeof(int));
+	
+	alloc_data(messageSize);
+
+	memcpy(static_cast<void*>(_data), obj, messageSize);
+
+	char* bufferPointer = _data;
+
+	memcpy(&id, bufferPointer, sizeof(MsgId));
+	bufferPointer += sizeof(MsgId);
+
+	memcpy(&x1, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&y1, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&x2, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&y2, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&x3, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&y3, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&x4, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&y4, bufferPointer, sizeof(int));
 
 	return 0;
 }

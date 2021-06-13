@@ -68,9 +68,11 @@ bool PiumPiumMasterClient::checkInput() {
     }
     return true;
 }
-void PiumPiumMasterClient::start() {
+void PiumPiumMasterClient::start(char* ip, char* port, char* playerName) {
 	exit_ = false;
 	
+	net_client = new NetworkClient(ip, port, playerName);
+	net_client->start();
 
 	while (!exit_) {
 		Uint32 startTime = game_->getTime();

@@ -1,8 +1,11 @@
 #include "Network.h"
+#include <mutex>
 
+std::mutex mut;
+std::queue<Serializable*> messages_;
 //========================================= CLIENT =============================================
 
-NetworkClient::NetworkClient(const char * direccion, const char * puerto) : socket_(direccion,puerto){
+NetworkClient::NetworkClient(const char * direccion, const char * puerto, char* _playerName) : socket_(direccion,puerto), playerName(_playerName){
 
 }
 
@@ -23,22 +26,46 @@ void NetworkClient::send(Serializable* message){
 }
 
 void NetworkClient::proccessMessages(){
-
+    mut.lock();
+    mut.unlock();
 }
 
 void NetworkClient::login(){
     std::cout << "[Client] Login\n";
-    TestingMessage loginMessage = TestingMessage(5);
+    LoginClientMessage loginMessage(playerName);
+
     socket_.send(loginMessage, socket_);
 }
 
 void NetworkClient::recieve_thread(){
     while(true){
-        TestingMessage* ms = new TestingMessage(3);
+        NetworkMessage nm;
+        char* msData;
 
-        socket_.recv(*ms);
+        socket_.recv(nm, msData);
 
-        std::cout << "[Client] Message recv: " << ms->win << '\n';
+        mut.lock();
+        switch (nm.id)
+        {
+        case MsgId::_CONFIRMATION_LOGIN :{
+            ConfirmationLoginMessage* confirmationLogin = new ConfirmationLoginMessage();
+            confirmationLogin->from_bin(msData);
+            messages_.push(confirmationLogin);
+            std::cout << "Mensaje de confirmacion de login\n";
+            break;
+        }
+        case MsgId::_START_GAME :{
+            StartGameMessage* startGame = new StartGameMessage();
+            startGame->from_bin(msData);
+            messages_.push(startGame);
+            std::cout << "Mensaje de start game\n";
+            break;
+        }
+        default:
+            std::cout << "Mensaje no identificado\n";
+            break;
+        }
+        mut.unlock();
     }
 }
 
@@ -50,15 +77,22 @@ void NetworkServer::start(){
 }
 
 void NetworkServer::proccessMessages(){
-
+    mut.lock();
+    mut.unlock();
 }
 
-void NetworkServer::addClient(Socket* clientSocket, Serializable* message){
+void NetworkServer::addClient(Socket* clientSocket, LoginClientMessage* msg){
     if(isAlreadyRegistered(clientSocket)) return;
 
-    std::cout << "[Server] Adding a new client\n";
+    std::cout << "[Server] Adding a new client: " << msg->name_ << '\n';
     std::unique_ptr<Socket> loginRequest(new Socket(*clientSocket));
     clients.emplace_back(std::move(loginRequest));
+
+    messages_.push(msg);
+
+    ConfirmationLoginMessage confirmationMessage(clients.size() - 1);
+    socket.send(confirmationMessage, *clientSocket);
+    //piumpium->addClient(); ->se añade el go de un cliente(con sus componentes)
 }
 
 void NetworkServer::removeClient(Socket* clientSocket){
@@ -88,10 +122,27 @@ bool NetworkServer::isAlreadyRegistered(Socket* client){
 
 void NetworkServer::recieve_thread(){
     while(true){
-        TestingMessage ms = TestingMessage(0);
+        NetworkMessage nm;
+        char* msData;
+        Socket* clientSock;
 
-        socket.recv(ms);
+        socket.recv(nm, clientSock, msData);
 
-        std::cout << "[Server] Message recv: " << ms.win << '\n';
+        mut.lock();
+        switch (nm.id)
+        {
+        case MsgId::_LOG_IN_CLIENT : {
+            LoginClientMessage* loginClientMessage = new LoginClientMessage();
+            loginClientMessage->from_bin(msData);
+            addClient(clientSock, loginClientMessage);
+            break;
+        }
+        case MsgId::_CLIENT_READY :
+            std::cout << "Client ready\n";
+            break;
+        default:
+            break;
+        }
+        mut.unlock();
     }
 }

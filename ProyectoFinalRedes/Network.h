@@ -1,22 +1,19 @@
 #pragma once
 
 #include <thread>
-#include <mutex>
-#include <thread>
 #include <queue>
 
 #include "Socket.h"
 #include "NetworkMessages.h"
 #include "Serializable.h"
 
-//std::mutex mut;
 
 // +-----------------------+
 // | Clase para el cliente |
 // +-----------------------+
 class NetworkClient {
 public:
-    NetworkClient(const char * direccion, const char * puerto);
+    NetworkClient(const char * direccion, const char * puerto, char* playerName);
     ~NetworkClient();
 
     //Inicializa el cliente en el servidor y crea el hilo para recibir mensajes
@@ -29,8 +26,8 @@ private:
     void login();
     void recieve_thread();
 
+    char* playerName;
     Socket socket_;
-    std::queue<Serializable*> messages_;
     std::thread incomingMessagesThread_;
 };
 
@@ -48,7 +45,7 @@ public:
     void proccessMessages();
 
 private:
-    void addClient(Socket* clientSocket, Serializable* message);
+    void addClient(Socket* clientSocket, LoginClientMessage* message);
     void removeClient(Socket* clientSocket);
     void broadcastMessage(Socket* clientSocket, Serializable* message);
     bool isAlreadyRegistered(Socket* client);
