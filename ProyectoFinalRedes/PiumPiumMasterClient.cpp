@@ -71,7 +71,7 @@ bool PiumPiumMasterClient::checkInput() {
 void PiumPiumMasterClient::start(char* ip, char* port, char* playerName) {
 	exit_ = false;
 	
-	net_client = new NetworkClient(ip, port, playerName);
+	net_client = new NetworkClient(ip, port, playerName, this);
 	net_client->start();
 
 	while (!exit_) {
@@ -85,7 +85,7 @@ void PiumPiumMasterClient::start(char* ip, char* port, char* playerName) {
 
 		renderSystem_->update();
 
-		// this is needed for sending the messages!
+		net_client->proccessMessages();
 		mngr_->flushMessages();
 
 		SDL_RenderPresent(game_->getRenderer());

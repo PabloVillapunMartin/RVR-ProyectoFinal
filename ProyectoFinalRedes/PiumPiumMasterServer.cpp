@@ -90,6 +90,7 @@ void PiumPiumMasterServer::start(char* ip, char* port) {
 		// audioSystem->update();
 
 		// this is needed for sending the messages!
+		net_server->proccessMessages();
 		mngr_->flushMessages();
 
 		SDL_RenderPresent(game_->getRenderer());

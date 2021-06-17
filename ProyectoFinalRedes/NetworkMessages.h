@@ -2,6 +2,7 @@
 #include <ctime>
 #include "Serializable.h"
 #include <string>
+#include "Socket.h"
 
 class Entity;
 
@@ -42,7 +43,6 @@ public:
 	LoginClientMessage() : NetworkMessage(_LOG_IN_CLIENT) {};
 
 	~LoginClientMessage(){ 
-		std::cout << "hehe";
 	};
 
 	int from_bin(char* data) override;
@@ -51,6 +51,8 @@ public:
 
 	std::string name_;
 	const int SIZE_NAME = 20;
+
+	Socket* clientSocket;
 };
 
 //Mensaje de confirmacion del servidor al cliente
@@ -89,4 +91,18 @@ public:
 	int x2, y2;
 	int x3, y3;
 	int x4, y4;
+};
+
+//Mensaje de confirmacion del cliente al servidor
+class ClientReadyMessage : public NetworkMessage {
+public:
+	ClientReadyMessage(int id) : NetworkMessage(_CLIENT_READY) {};
+
+	ClientReadyMessage() : NetworkMessage(_CLIENT_READY) {};
+
+	~ClientReadyMessage(){}
+
+	int from_bin(char* data) override;
+
+	void to_bin() override;
 };

@@ -160,3 +160,26 @@ int StartGameMessage::from_bin(char* obj){
 
 	return 0;
 }
+//////////////////////////////CLIENT READY ////////////////////////////////
+int ClientReadyMessage::from_bin(char* obj){
+	alloc_data(sizeof(MsgId));
+
+	memcpy(static_cast<void *>(_data), obj, sizeof(MsgId));
+
+	char* bufferPointer = _data;
+
+	memcpy(&id, bufferPointer, sizeof(MsgId));
+
+	return 0;
+}
+void ClientReadyMessage::to_bin(){
+	int32_t messageSize = sizeof(MsgId);
+
+	alloc_data(messageSize);
+
+	memset(_data, 0, messageSize);
+
+	char* bufferPointer = _data;
+
+	memcpy(bufferPointer, &id, sizeof(MsgId));
+}

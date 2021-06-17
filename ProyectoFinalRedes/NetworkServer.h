@@ -12,7 +12,7 @@
 // +------------------------+
 class NetworkServer {
 public:
-    NetworkServer(const char * s, const char * p): socket(s, p)
+    NetworkServer(const char * s, const char * p): socket(s, p), playersReady(0)
     {
         socket.bind();
     };
@@ -23,7 +23,7 @@ public:
 private:
     void addClient(Socket* clientSocket, LoginClientMessage* message);
     void removeClient(Socket* clientSocket);
-    void broadcastMessage(Socket* clientSocket, Serializable* message);
+    void broadcastMessage(Serializable* message);
     bool isAlreadyRegistered(Socket* client);
 
     void recieve_thread();
@@ -36,4 +36,6 @@ private:
 
     //Thread de la lectura de mensajes de clientes
     std::thread incomingMessagesThread_;
+
+    int playersReady;
 };

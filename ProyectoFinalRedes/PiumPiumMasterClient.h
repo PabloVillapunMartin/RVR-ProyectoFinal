@@ -19,6 +19,8 @@ public:
 	void start(char* ip, char* port, char* playerName);
 	void stop();
 
+	inline void setID(int id){ idClient_ = id;}
+
 private:
 	void initGame();
 	void closeGame();
@@ -31,6 +33,7 @@ private:
 
 	RenderSystem *renderSystem_;
 
+	int idClient_;
 	const static int _WINDOW_WIDTH_ = 640;
 	const static int _WINDOW_HEIGHT_ = 480;
 
