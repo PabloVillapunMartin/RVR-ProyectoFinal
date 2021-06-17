@@ -15,6 +15,7 @@ enum MsgId : msgType {
 	_CLIENT_READY,
 	_UPDATE_CLIENT_PLAYER,
 	_UPDATE_GAMEOBJECT,
+	_SHOOT,
 	//
 	_last_MsgId_
 };

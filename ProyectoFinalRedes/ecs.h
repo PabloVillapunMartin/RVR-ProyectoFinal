@@ -14,6 +14,7 @@ enum CmpId : CmpIdType {
 	AnimatedImageComponent,
 	GameState,
 	Bonus,
+	IdGame,
 	//
 	// don't touch the rest of this enum, it is to identify the max
 	// number of components
@@ -24,6 +25,7 @@ enum GrpId : GrpIdType {
 	_grp_Star,
 	_grp_Ghost,
 	_grp_Food,
+	_grp_Player,
 	//
 	// don't touch the rest of this enum, it is to identify the max
 	// number of groups
@@ -42,13 +44,10 @@ enum HdlrId : HdlrIdType {
 
 enum SysId : SysIdType {
 	_sys_GameCtrl,
-	_sys_PacMan,
-	_sys_Ghosts,
-	_sys_Food,
 	_sys_Render,
 	_sys_Collisions,
 	_sys_Audio,
-	_sys_Strawberry,
+	_sys_Player,
 	//
 	// don't touch the rest of this enum, it is to identify the max
 	// number of systems

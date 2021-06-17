@@ -9,6 +9,7 @@
 #include "RenderSystem.h"
 #include "Manager.h"
 #include "SDLGame.h"
+#include "BulletPool.h"
 
 using namespace std;
 
@@ -29,7 +30,7 @@ void PiumPiumMasterClient::initGame() {
 
 	// create the manager
 	mngr_ = new Manager(game_);
-
+	//game_->setManager(mngr_);
 	renderSystem_ = mngr_->addSystem<RenderSystem>();
 
 }

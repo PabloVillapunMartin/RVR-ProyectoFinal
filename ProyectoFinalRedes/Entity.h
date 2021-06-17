@@ -22,7 +22,8 @@ public:
 	Entity() :
 			game_(SDLGame::instance()), //
 			mngr_(nullptr), //
-			active_(true) {
+			active_(true)
+	{
 	}
 
 	virtual ~Entity() {
@@ -89,6 +90,8 @@ public:
 		return groups_[grpId];
 	}
 
+	int id;
+
 private:
 	SDLGame *game_;
 	Manager *mngr_;
@@ -96,7 +99,7 @@ private:
 	std::array<uptr_cmp, ecs::maxComponents> cmpArray_ = { };
 	std::bitset<ecs::maxGroups> groups_;
 
-
 	bool active_;
+
 };
 

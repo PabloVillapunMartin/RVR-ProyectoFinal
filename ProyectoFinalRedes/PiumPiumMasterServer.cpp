@@ -10,6 +10,7 @@
 #include "RenderSystem.h"
 #include "Manager.h"
 #include "SDLGame.h"
+#include "BulletPool.h"
 
 using namespace std;
 
@@ -27,18 +28,13 @@ PiumPiumMasterServer::~PiumPiumMasterServer() {
 
 
 void PiumPiumMasterServer::initGame() {
-
 	game_ = SDLGame::init("PiumPiumMasterServer", _WINDOW_WIDTH_, _WINDOW_HEIGHT_);
 
-	// Initialize the pool, for the rest of factories it is not needed,
-	// we will be using DefFactory for simplicity (e.g., in addEntity,
-	// addComponnet, send)
-	//
-	// GhostsPool::init(21);        // for caching ghost entities
-	// FoodPool::init(22);          // for caching food entities
+	//BulletPool::init(40);
 
 	// create the manager
 	mngr_ = new Manager(game_);
+	//game_->setManager(mngr_);
 
 	// // create the systems
 	// ghostsSystem_ = mngr_->addSystem<GhostsSystem>();
@@ -61,10 +57,6 @@ void PiumPiumMasterServer::start(char* ip, char* port) {
 	
 	net_server = new NetworkServer(ip, port);
 	net_server->start();
-
-	//Entity* e = mngr_->addEntity();
-	//e->addComponent<ImageComponent*>(ecs::ImageComponent);
-	//e->addComponent<Transform*>(ecs::Transform);
 
 	while (!exit_) {
 		Uint32 startTime = game_->getTime();

@@ -6,6 +6,7 @@
 #include "FontsManager.h"
 #include "RandomNumberGenerator.h"
 #include "InputHandler.h"
+//#include "Manager.h"
 
 #include <SDL2/SDL.h>
 #include <string>
@@ -35,6 +36,12 @@ public:
 	inline SDL_Window* getWindow() const {
 		return window_;
 	}
+	// inline Manager* getManager() const {
+	// 	return manager_;
+	// }
+	// inline void setManager(Manager* manager){
+	// 	manager_ = manager;
+	// }
 
 	inline SDL_Renderer* getRenderer() const {
 		return renderer_;
@@ -95,6 +102,7 @@ protected:
 	TexturesManager *textures_;
 	AudioManager *audio_;
 	RandomNumberGenerator *random_;
+	//Manager *manager_;
 
 	SDL_Window *window_; // the window
 	SDL_Renderer *renderer_;  // the renderer
