@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Network.h"
+#include "NetworkClient.h"
 
 
 class CollisionSystem;

@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <iostream>
 
 int NetworkMessage::from_bin(char* obj){
 	alloc_data(sizeof(MsgId));
@@ -11,13 +12,50 @@ int NetworkMessage::from_bin(char* obj){
 
 	char* bufferPointer = _data;
 
-	memcpy(bufferPointer, &id, sizeof(MsgId));
+	memcpy(&id, bufferPointer, sizeof(MsgId));
 
 	return 0;
 }
+/////////////////////////LOGIN CLIENT//////////////////////////////////
+void LoginClientMessage::to_bin(){
+	int messageSize = sizeof(MsgId) + 20 * sizeof(char);
+
+	alloc_data(messageSize);
+	memset(_data, 0, messageSize);
+
+	char* bufferPointer = _data;
+	memcpy(bufferPointer, &id, sizeof(MsgId));
+
+	bufferPointer += sizeof(MsgId);
+
+	memcpy(bufferPointer, name_.c_str(), 20 * sizeof(char));
+}
+
+int LoginClientMessage::from_bin(char* obj){
+	int messageSize = sizeof(MsgId) + 20 * sizeof(char);
+
+	alloc_data(messageSize);
+
+	memcpy(static_cast<void *>(_data), obj, messageSize);
+
+	char* bufferPointer = _data;
+	memcpy(&id, bufferPointer, sizeof(MsgId));
+
+	bufferPointer += sizeof(MsgId);
+
+	char bufferName[20 * sizeof(char)];
+	memcpy(&bufferName, bufferPointer, 20 * sizeof(char));
+
+	name_ = bufferName;
+
+	std::cout << "Client " << name_ << '\n';
+
+	return 0;
+}
+//////////////////CONFIRMATION LOGIN CLIENT//////////////////////////////
 
 void ConfirmationLoginMessage::to_bin(){
-	int messageSize = sizeof(MsgId) + sizeof(int);
+	int32_t messageSize = sizeof(MsgId) + sizeof(int);
 
 	alloc_data(messageSize);
 
@@ -47,6 +85,7 @@ int ConfirmationLoginMessage::from_bin(char* obj){
 
 	return 0;
 }
+/////////////////////////START GAME//////////////////////////////////
 
 void StartGameMessage::to_bin(){
 	int messageSize = sizeof(MsgId) + (8 * sizeof(int));

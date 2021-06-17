@@ -1,13 +1,15 @@
 #pragma once
 #include <ctime>
 #include "Serializable.h"
+#include <string>
 
 class Entity;
 
 using msgType = std::size_t;
 enum MsgId : msgType {
-	_LOG_IN_CLIENT,
+	_network_,
 	_CONFIRMATION_LOGIN,
+	_LOG_IN_CLIENT,
 	_START_GAME,
 	_CLIENT_READY,
 	_UPDATE_CLIENT_PLAYER,
@@ -21,7 +23,9 @@ class NetworkMessage : public Serializable{
 public:
 	NetworkMessage(MsgId id) : id(id) {};
 
-	NetworkMessage() : id(_last_MsgId_) {};
+	NetworkMessage() : id(_network_) {};
+
+	~NetworkMessage(){};
 
 	virtual int from_bin(char* data) override;
 
@@ -37,11 +41,16 @@ public:
 
 	LoginClientMessage() : NetworkMessage(_LOG_IN_CLIENT) {};
 
+	~LoginClientMessage(){ 
+		std::cout << "hehe";
+	};
+
 	int from_bin(char* data) override;
 
 	void to_bin() override;
 
-	char* name_;
+	std::string name_;
+	const int SIZE_NAME = 20;
 };
 
 //Mensaje de confirmacion del servidor al cliente
@@ -50,6 +59,8 @@ public:
 	ConfirmationLoginMessage(int id) : NetworkMessage(_CONFIRMATION_LOGIN), gameObjectID(id) {};
 
 	ConfirmationLoginMessage() : NetworkMessage(_CONFIRMATION_LOGIN) {};
+
+	~ConfirmationLoginMessage(){}
 
 	int from_bin(char* data) override;
 
@@ -67,6 +78,8 @@ public:
 	 x4(_x4),y4(_y4) {};
 
 	StartGameMessage() : NetworkMessage(_START_GAME) {};
+
+	~StartGameMessage(){}
 
 	int from_bin(char* data) override;
 

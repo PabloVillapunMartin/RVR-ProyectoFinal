@@ -33,24 +33,24 @@ Socket::Socket(const char * address, const char * port):sd(-1)
 	freeaddrinfo(res);
 }
 
-int Socket::recv(Serializable &obj, Socket * &sock, char* objData)
+int Socket::recv(Serializable &obj, Socket * &sock, char* &objData)
 {
     struct sockaddr sa;
     socklen_t sa_len = sizeof(struct sockaddr);
-
     objData = (char*)malloc(MAX_MESSAGE_SIZE);
+    char buffer[MAX_MESSAGE_SIZE];
 
-    ssize_t bytes = ::recvfrom(sd, objData, MAX_MESSAGE_SIZE, 0, &sa, &sa_len);
+    ssize_t bytes = ::recvfrom(sd, buffer, MAX_MESSAGE_SIZE, 0, &sa, &sa_len);
     if ( bytes <= 0 )
     {
         return -1;
     }
 
-    if ( sock != 0 )
+    if ( sock == nullptr)
     {
         sock = new Socket(&sa, sa_len);
     }
-    
+    memcpy(static_cast<void*>(objData), buffer, MAX_MESSAGE_SIZE);
     obj.from_bin(objData);
     return 0;
 }

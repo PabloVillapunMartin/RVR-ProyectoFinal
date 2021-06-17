@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Network.h"
+#include "NetworkServer.h"
 
 class CollisionSystem;
 class Manager;
@@ -29,7 +29,6 @@ private:
 	Manager *mngr_;
 	bool exit_;
 	NetworkServer* net_server;
-	NetworkClient* net_client;
 
 	CollisionSystem *collisionSystem_;
 	RenderSystem *renderSystem_;
