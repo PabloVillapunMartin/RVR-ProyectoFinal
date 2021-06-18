@@ -19,11 +19,11 @@ public:
     
     void start();
     void proccessMessages();
+    void broadcastMessage(Serializable* message);
 
 private:
     void addClient(Socket* clientSocket, LoginClientMessage* message);
     void removeClient(Socket* clientSocket);
-    void broadcastMessage(Serializable* message);
     bool isAlreadyRegistered(Socket* client);
 
     void recieve_thread();

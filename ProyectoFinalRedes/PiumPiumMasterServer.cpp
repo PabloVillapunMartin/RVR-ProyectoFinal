@@ -11,6 +11,8 @@
 #include "Manager.h"
 #include "SDLGame.h"
 #include "BulletPool.h"
+#include "PlayerSystem.h"
+#include "IdGame.h"
 
 using namespace std;
 
@@ -30,17 +32,19 @@ PiumPiumMasterServer::~PiumPiumMasterServer() {
 void PiumPiumMasterServer::initGame() {
 	game_ = SDLGame::init("PiumPiumMasterServer", _WINDOW_WIDTH_, _WINDOW_HEIGHT_);
 
-	//BulletPool::init(40);
-
 	// create the manager
 	mngr_ = new Manager(game_);
 	game_->setManager(mngr_);
 
 	// // create the systems
+	playerSystem_=mngr_->addSystem<PlayerSystem>();
+	renderSystem_ = mngr_->addSystem<RenderSystem>();
+
+	//BulletPool::init(40);
 	// ghostsSystem_ = mngr_->addSystem<GhostsSystem>();
 	// foodSystem_ = mngr_->addSystem<FoodSystem>();
+
 	// pacmanSystem_ = mngr_->addSystem<PacManSystem>();
-	renderSystem_ = mngr_->addSystem<RenderSystem>();
 	// collisionSystem_ = mngr_->addSystem<CollisionSystem>();
 	// gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>();
 	// audioSystem = mngr_->addSystem<AudioSystem>();
@@ -50,7 +54,13 @@ void PiumPiumMasterServer::initGame() {
 void PiumPiumMasterServer::closeGame() {
 	delete mngr_;
 }
-
+void PiumPiumMasterServer::sendObjectPositions(){
+	for(auto& players: mngr_->getGroupEntities(ecs::_grp_Player)){
+		Transform* tr = players->getComponent<Transform>(ecs::Transform);
+		UpdateGameObjectMessage update(players->getComponent<IdGame>(ecs::IdGame)->id, tr->position_.getX(), tr->position_.getY(), tr->rotation_);
+		net_server->broadcastMessage(&update);
+	}
+}
 void PiumPiumMasterServer::start(char* ip, char* port) {
 	exit_ = false;
 	auto ih = InputHandler::instance();
@@ -73,17 +83,13 @@ void PiumPiumMasterServer::start(char* ip, char* port) {
 
 		mngr_->refresh();
 
-		// gameCtrlSystem_->update();
-		// ghostsSystem_->update();
-		// pacmanSystem_->update();
-		// foodSystem_->update();
 		// collisionSystem_->update();
-		// renderSystem_->update();
-		// audioSystem->update();
 
 		// this is needed for sending the messages!
 		net_server->proccessMessages();
 		mngr_->flushMessages();
+
+		sendObjectPositions();
 
 		SDL_RenderPresent(game_->getRenderer());
 

@@ -124,3 +124,19 @@ public:
 	int x, y, go_id;
 	float rotation;
 };
+//Mensaje de confirmacion del cliente al servidor
+class UpdateGameObjectMessage : public NetworkMessage {
+public:
+	UpdateGameObjectMessage(int goid, int x_, int y_, float rotation_) : NetworkMessage(_UPDATE_GAMEOBJECT), x(x_), y(y_), go_id(goid), rotation(rotation_) {};
+
+	UpdateGameObjectMessage() : NetworkMessage(_UPDATE_GAMEOBJECT) {};
+
+	~UpdateGameObjectMessage(){}
+
+	int from_bin(char* data) override;
+
+	void to_bin() override;
+
+	int x, y, go_id;
+	float rotation;
+};

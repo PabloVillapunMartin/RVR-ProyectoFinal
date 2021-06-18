@@ -22,6 +22,7 @@ public:
 
 	inline void setID(int id){ idClient_ = id;}
 	void createGO(int x, int y, int id, int type);
+	void updateGO(int x, int y, float rot, int id);
 
 private:
 	void initGame();

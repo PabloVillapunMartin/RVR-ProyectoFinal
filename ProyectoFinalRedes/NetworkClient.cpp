@@ -62,7 +62,11 @@ void NetworkClient::proccessMessages(){
 
             break;
         }
-        
+        case MsgId::_UPDATE_GAMEOBJECT: {
+            UpdateGameObjectMessage* ms = static_cast<UpdateGameObjectMessage*>(msg);
+            gameClient->updateGO(ms->x, ms->y, ms->rotation, ms->go_id);
+            break;
+        }
         default:
             break;
         }
@@ -98,6 +102,12 @@ void NetworkClient::recieve_thread(){
             startGame->from_bin(msData);
             messages_.push(startGame);
             std::cout << "[CLient] Start GAme message\n";
+            break;
+        }
+        case MsgId::_UPDATE_GAMEOBJECT: {
+            UpdateGameObjectMessage* ms = new UpdateGameObjectMessage();
+            ms->from_bin(msData);
+            messages_.push(ms);
             break;
         }
         default:

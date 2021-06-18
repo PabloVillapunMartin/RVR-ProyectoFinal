@@ -131,3 +131,11 @@ void PiumPiumMasterClient::createGO(int x, int y, int id, int type){
 		tr->width_= 16; tr->height_ = 16;
 	}
 }
+void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id){
+	//Players
+	if(id < 4){
+		Transform* tr = mngr_->getGroupEntities(ecs::_grp_Player)[id]->getComponent<Transform>(ecs::Transform);
+		tr->position_ = {x, y};
+		tr->rotation_ = rot;
+	}
+}
