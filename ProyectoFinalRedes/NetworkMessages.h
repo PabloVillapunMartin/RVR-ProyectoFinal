@@ -107,3 +107,20 @@ public:
 
 	void to_bin() override;
 };
+
+//Mensaje de confirmacion del cliente al servidor
+class UpdateClientPlayerMessage : public NetworkMessage {
+public:
+	UpdateClientPlayerMessage(int goid, int x_, int y_, float rotation_) : NetworkMessage(_UPDATE_CLIENT_PLAYER), x(x_), y(y_), go_id(goid), rotation(rotation_) {};
+
+	UpdateClientPlayerMessage() : NetworkMessage(_CLIENT_READY) {};
+
+	~UpdateClientPlayerMessage(){}
+
+	int from_bin(char* data) override;
+
+	void to_bin() override;
+
+	int x, y, go_id;
+	float rotation;
+};

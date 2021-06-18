@@ -13,6 +13,7 @@ public:
 		// images
 		PacManSprites,
 		Bullet,
+		Player,
 
 		// text
 		PressEnterToStartANewGame,

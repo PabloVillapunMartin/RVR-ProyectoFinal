@@ -10,7 +10,8 @@ vector<Resources::FontInfo> Resources::fonts_ {
 vector<Resources::ImageInfo> Resources::images_ {
 //
 		{ PacManSprites, "resources/images/pacman_sprites.png" }, //
-		{ Bullet, "resources/images/bala.png" } //
+		{ Bullet, "resources/images/bala.png" }, //
+		{ Player, "resources/images/player.png" } //
 };
 
 vector<Resources::TextMsgInfo> Resources::messages_ {

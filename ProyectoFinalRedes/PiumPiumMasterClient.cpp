@@ -1,6 +1,7 @@
 #include "PiumPiumMasterClient.h"
 
 #include <assert.h>
+#include <math.h>
 
 #include "ImageComponent.h"
 #include "Transform.h"
@@ -10,6 +11,11 @@
 #include "Manager.h"
 #include "SDLGame.h"
 #include "BulletPool.h"
+#include "GameCtrlSystem.h"
+#include "GameState.h"
+#include "NetworkMessages.h"
+
+#define PI 3.14159265
 
 using namespace std;
 
@@ -30,8 +36,9 @@ void PiumPiumMasterClient::initGame() {
 
 	// create the manager
 	mngr_ = new Manager(game_);
-	//game_->setManager(mngr_);
+	game_->setManager(mngr_);
 	renderSystem_ = mngr_->addSystem<RenderSystem>();
+	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>();
 
 }
 
@@ -43,30 +50,39 @@ bool PiumPiumMasterClient::checkInput() {
     auto ih = InputHandler::instance();
     ih->update();
     int x = 0, y = 0;
+	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame) {
+	
+		if (ih->keyDownEvent()) {
+			if (ih->isKeyDown(SDLK_ESCAPE) || ih->mouseMotionEvent() || ih->mouseButtonEvent()) {
+				exit_ = true;
+				return false;
+			}
+			if (ih->isKeyDown(SDLK_w))         
+				y = -1 ;
 
-    if (ih->keyDownEvent()) {
-        if (ih->isKeyDown(SDLK_ESCAPE)) {
-            exit_ = true;
-            return false;
-        }
-        if (ih->isKeyDown(SDLK_w))         
-            y = -1 ;
+			if (ih->isKeyDown(SDLK_d)) 
+				x = 1; 
 
-        if (ih->isKeyDown(SDLK_d)) 
-            x = 1; 
+			if (ih->isKeyDown(SDLK_a)) 
+				x = -1; 
+			
+			if (ih->isKeyDown(SDLK_s)) 
+				y = 1;
 
-        if (ih->isKeyDown(SDLK_a)) 
-            x = -1; 
-        
-        if (ih->isKeyDown(SDLK_s)) 
+			if(ih->getMouseButtonState(InputHandler::MOUSEBUTTON::LEFT)){
+				//Mensaje de bala
+			}
 
-        if(ih->getMouseButtonState(InputHandler::MOUSEBUTTON::LEFT)){
-            //Mensaje de bala
-        }
-
-        //Mensaje de movimientoJugador(x,y,rotacion, gameObject);
-        
-    }
+			Vector2D posMouse = ih->getMousePos();
+			Vector2D dir = posMouse - mngr_->getGroupEntities(ecs::_grp_Player)[idClient_]->getComponent<Transform>(ecs::Transform)->position_;
+			float rot = atan(dir.getY() / dir.getX()) * 180 / PI;
+			UpdateClientPlayerMessage ms;
+			ms.go_id = idClient_;
+			ms.x = x; ms.y = y;
+			ms.rotation = rot;
+			net_client->send(&ms);
+		}
+	}
     return true;
 }
 void PiumPiumMasterClient::start(char* ip, char* port, char* playerName) {
@@ -97,4 +113,21 @@ void PiumPiumMasterClient::start(char* ip, char* port, char* playerName) {
 	}
 }
 
+void PiumPiumMasterClient::createGO(int x, int y, int id, int type){
+	Entity* ent = mngr_->addEntity();
 
+	Transform* tr = ent->addComponent<Transform>();
+	tr->position_ = {x,y};
+
+	ent->addComponent<IdGame>(ent->getEntityMngr()->getIdCount());
+	if(type == 0){
+		ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Player));
+		ent->addToGroup(ecs::_grp_Player);
+		tr->width_= 32; tr->height_ = 32;
+	}
+	else{
+		ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Bullet));
+		ent->addToGroup(ecs::_grp_Bullet);
+		tr->width_= 16; tr->height_ = 16;
+	}
+}

@@ -50,7 +50,7 @@ private:
 		for (Entity* e : pool_.getPool()) {
 			e->addComponent<Transform>();
 			e->addComponent<ImageComponent>(SDLGame::instance()->getTextureMngr()->getTexture(Resources::Bullet));
-            //e->addComponent<IdGame>(SDLGame::instance()->getManager()->getIdCount());
+            e->addComponent<IdGame>(SDLGame::instance()->getManager()->getIdCount());
 		}
 	}
 

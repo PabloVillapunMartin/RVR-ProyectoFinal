@@ -8,6 +8,7 @@ class CollisionSystem;
 class Manager;
 class SDLGame;
 class RenderSystem;
+class GameCtrlSystem;
 
 class PiumPiumMasterClient {
 
@@ -20,6 +21,7 @@ public:
 	void stop();
 
 	inline void setID(int id){ idClient_ = id;}
+	void createGO(int x, int y, int id, int type);
 
 private:
 	void initGame();
@@ -32,6 +34,7 @@ private:
 	NetworkClient* net_client;
 
 	RenderSystem *renderSystem_;
+	GameCtrlSystem *gameCtrlSystem_;
 
 	int idClient_;
 	const static int _WINDOW_WIDTH_ = 640;

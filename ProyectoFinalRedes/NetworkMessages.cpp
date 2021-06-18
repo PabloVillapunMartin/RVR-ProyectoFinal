@@ -183,3 +183,57 @@ void ClientReadyMessage::to_bin(){
 
 	memcpy(bufferPointer, &id, sizeof(MsgId));
 }
+
+/////////////////////////// UPDATE CLIENT PLAYER //////////////////////////
+
+void UpdateClientPlayerMessage::to_bin(){
+	int32_t messageSize = sizeof(MsgId) + 3 * sizeof(int) + sizeof(float);
+
+	alloc_data(messageSize);
+
+	memset(_data, 0, messageSize);
+
+	char* bufferPointer = _data;
+
+	memcpy(bufferPointer, &id, sizeof(MsgId));
+	bufferPointer += sizeof(MsgId);
+
+	memcpy(bufferPointer, &go_id, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &x, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &y, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &rotation, sizeof(float));
+	bufferPointer += sizeof(float);
+}
+
+int UpdateClientPlayerMessage::from_bin(char* obj){
+	int32_t messageSize = sizeof(MsgId) + 3 * sizeof(int) + sizeof(float);
+	
+	alloc_data(messageSize);
+
+	memcpy(static_cast<void *>(_data), obj, messageSize);
+
+	char* bufferPointer = _data;
+
+	memcpy(&id, bufferPointer, sizeof(MsgId));
+	bufferPointer += sizeof(MsgId);
+
+	memcpy(&go_id, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&x, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&y, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&rotation, bufferPointer, sizeof(float));
+	bufferPointer += sizeof(float);
+
+	return 0;
+}

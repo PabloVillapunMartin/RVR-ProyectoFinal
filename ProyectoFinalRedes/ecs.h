@@ -26,6 +26,7 @@ enum GrpId : GrpIdType {
 	_grp_Ghost,
 	_grp_Food,
 	_grp_Player,
+	_grp_Bullet,
 	//
 	// don't touch the rest of this enum, it is to identify the max
 	// number of groups
@@ -35,7 +36,6 @@ enum GrpId : GrpIdType {
 enum HdlrId : HdlrIdType {
 	_hdlr_PacManEntity,
 	_hdlr_GameStateEntity,
-	_hdlr_strawberry,
 	//
 	// don't touch the rest of this enum, it is to identify the max
 	// number of handlers
@@ -48,6 +48,7 @@ enum SysId : SysIdType {
 	_sys_Collisions,
 	_sys_Audio,
 	_sys_Player,
+	_sys_Bullets,
 	//
 	// don't touch the rest of this enum, it is to identify the max
 	// number of systems

@@ -22,8 +22,8 @@ void NetworkServer::proccessMessages(){
                 playersReady ++;
                  std::cout << "[Server] Players ready to play: "<< playersReady << "\n";
 
-                if(playersReady == 4){
-                    StartGameMessage startGame(20, 20, 70, 20, 20, 70, 70, 70);
+                if(playersReady == 2){
+                    StartGameMessage startGame(40, 40, 600, 40, 40, 440, 600, 440);
                     broadcastMessage(&startGame);
                 }
                 break;
@@ -31,6 +31,10 @@ void NetworkServer::proccessMessages(){
             case MsgId::_LOG_IN_CLIENT : {
                 LoginClientMessage* loginClientMessage = static_cast<LoginClientMessage*>(msg);
                 addClient(loginClientMessage->clientSocket, loginClientMessage);
+                break;
+            }
+            case MsgId::_UPDATE_CLIENT_PLAYER :{
+                UpdateClientPlayerMessage* clientReadyMessage = static_cast<UpdateClientPlayerMessage*>(msg);
                 break;
             }
             default:
@@ -100,6 +104,13 @@ void NetworkServer::recieve_thread(){
         case MsgId::_CLIENT_READY :{
             std::cout << "Client ready\n";
             ClientReadyMessage* clientReadyMessage = new ClientReadyMessage();
+            clientReadyMessage->from_bin(msData);
+
+            messagesServer_.push(clientReadyMessage);
+            break;
+        }
+        case MsgId::_UPDATE_CLIENT_PLAYER :{
+            UpdateClientPlayerMessage* clientReadyMessage = new UpdateClientPlayerMessage();
             clientReadyMessage->from_bin(msData);
 
             messagesServer_.push(clientReadyMessage);

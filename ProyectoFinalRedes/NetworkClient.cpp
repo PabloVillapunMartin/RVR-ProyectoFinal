@@ -1,6 +1,9 @@
 #include "NetworkClient.h"
 #include "NetworkMessages.h"
 #include "PiumPiumMasterClient.h"
+#include "SDLGame.h"
+#include "Manager.h"
+#include "GameState.h"
 
 #include <mutex>
 
@@ -49,7 +52,14 @@ void NetworkClient::proccessMessages(){
         }   
         case MsgId::_START_GAME :{
             std::cout << "[Client] Game has initialised\n";
-            //Poner posiciones en el arrat de go
+            StartGameMessage* start = static_cast<StartGameMessage*>(msg);
+            gameClient->createGO(start->x1,start->y1,0,0);
+            gameClient->createGO(start->x2,start->y2,1,0);
+            gameClient->createGO(start->x3,start->y3,2,0);
+            gameClient->createGO(start->x4,start->y4,3,0);
+
+	        SDLGame::instance()->getManager()->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state = GameState::inGame;
+
             break;
         }
         

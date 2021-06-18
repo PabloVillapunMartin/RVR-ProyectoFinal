@@ -34,7 +34,7 @@ void PiumPiumMasterServer::initGame() {
 
 	// create the manager
 	mngr_ = new Manager(game_);
-	//game_->setManager(mngr_);
+	game_->setManager(mngr_);
 
 	// // create the systems
 	// ghostsSystem_ = mngr_->addSystem<GhostsSystem>();

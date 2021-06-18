@@ -8,7 +8,5 @@ public:
 	RenderSystem();
 	void update() override;
 
-private:
-	void drawAnimated(Entity *e);
 };
 

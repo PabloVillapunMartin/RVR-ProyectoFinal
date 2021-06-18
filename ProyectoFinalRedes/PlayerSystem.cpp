@@ -16,11 +16,24 @@ void PlayerSystem::init(){
 	for(int i = 0; i < 4; ++i){
 		Entity* ent = mngr_->addEntity();
 		Transform* tr = ent->addComponent<Transform>();
-		ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Bullet));
-		//ent->addComponent<IdGame>(ent->getEntityMngr()->getIdCount());
+		tr->height_ = 32; tr->width_= 32;
+		ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Player));
+		ent->addComponent<IdGame>(ent->getEntityMngr()->getIdCount());
 		players.push_back(ent);
-		mngr_->addToGroup(ecs::_grp_Player, ent);
+		ent->addToGroup(ecs::_grp_Player);
 	}
+
+	Transform* tr = players[0]->getComponent<Transform>(ecs::Transform);
+	tr->position_= {40,40};
+
+	tr = players[1]->getComponent<Transform>(ecs::Transform);
+	tr->position_= {600,40};
+
+	tr = players[2]->getComponent<Transform>(ecs::Transform);
+	tr->position_= {40,440};
+
+	tr = players[3]->getComponent<Transform>(ecs::Transform);
+	tr->position_= {600,440};
 
 }
 
