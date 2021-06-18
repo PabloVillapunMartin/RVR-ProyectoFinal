@@ -113,7 +113,7 @@ class UpdateClientPlayerMessage : public NetworkMessage {
 public:
 	UpdateClientPlayerMessage(int goid, int x_, int y_, float rotation_) : NetworkMessage(_UPDATE_CLIENT_PLAYER), x(x_), y(y_), go_id(goid), rotation(rotation_) {};
 
-	UpdateClientPlayerMessage() : NetworkMessage(_CLIENT_READY) {};
+	UpdateClientPlayerMessage() : NetworkMessage(_UPDATE_CLIENT_PLAYER) {};
 
 	~UpdateClientPlayerMessage(){}
 

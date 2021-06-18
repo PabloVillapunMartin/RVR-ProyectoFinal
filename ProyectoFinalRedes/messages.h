@@ -30,7 +30,7 @@ namespace msg {
 	};
 
 	struct MoveMessage : public Message {
-		MoveMessage(int _x, int _y, int _id) : Message(_MOVE_), x(_x), y(_y), id_go(_id) {};
+		MoveMessage(int _x, int _y, int _id, float rotation_) : Message(_MOVE_), x(_x), y(_y), id_go(_id), rotation(rotation_) {};
 		int x, y, id_go;
 		float rotation;
 	};

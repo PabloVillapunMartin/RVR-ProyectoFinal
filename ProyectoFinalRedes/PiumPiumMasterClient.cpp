@@ -52,8 +52,8 @@ bool PiumPiumMasterClient::checkInput() {
     int x = 0, y = 0;
 	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame) {
 	
-		if (ih->keyDownEvent()) {
-			if (ih->isKeyDown(SDLK_ESCAPE) || ih->mouseMotionEvent() || ih->mouseButtonEvent()) {
+		if (ih->keyDownEvent() || ih->mouseMotionEvent() || ih->mouseButtonEvent()) {
+			if (ih->isKeyDown(SDLK_ESCAPE)) {
 				exit_ = true;
 				return false;
 			}

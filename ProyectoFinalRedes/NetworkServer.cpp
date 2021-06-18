@@ -1,4 +1,7 @@
 #include "NetworkServer.h"
+#include "SDLGame.h"
+#include "Manager.h"
+#include "messages.h"
 #include <mutex>
 
 std::mutex mutServer;
@@ -19,8 +22,8 @@ void NetworkServer::proccessMessages(){
         switch ((size_t)msg->id)
         {
             case MsgId::_CLIENT_READY :{
-                playersReady ++;
-                 std::cout << "[Server] Players ready to play: "<< playersReady << "\n";
+                if(playersReady < 4) playersReady ++;
+                std::cout << "[Server] Players ready to play: "<< playersReady << "\n";
 
                 if(playersReady == 2){
                     StartGameMessage startGame(40, 40, 600, 40, 40, 440, 600, 440);
@@ -34,7 +37,9 @@ void NetworkServer::proccessMessages(){
                 break;
             }
             case MsgId::_UPDATE_CLIENT_PLAYER :{
-                UpdateClientPlayerMessage* clientReadyMessage = static_cast<UpdateClientPlayerMessage*>(msg);
+                UpdateClientPlayerMessage* ms = static_cast<UpdateClientPlayerMessage*>(msg);
+                SDLGame::instance()->getManager()->send<msg::MoveMessage>(ms->x, ms->y, ms->go_id, ms->rotation);
+                //std::cout << "UpdateClient info: " << ms->go_id << " | " << ms->x << ", " << ms->y << " | " << ms->rotation << '\n';
                 break;
             }
             default:
@@ -88,7 +93,7 @@ void NetworkServer::recieve_thread(){
         Socket* clientSock = nullptr;
     
         socket.recv(nm, clientSock, msData);
-        std::cout << "Mensaje recibido de tipo " << (size_t)nm.id << "\n"; 
+        //std::cout << "Mensaje recibido de tipo " << (size_t)nm.id << "\n"; 
 
         mutServer.lock();
         switch ((size_t)nm.id)
@@ -110,10 +115,10 @@ void NetworkServer::recieve_thread(){
             break;
         }
         case MsgId::_UPDATE_CLIENT_PLAYER :{
-            UpdateClientPlayerMessage* clientReadyMessage = new UpdateClientPlayerMessage();
-            clientReadyMessage->from_bin(msData);
+            UpdateClientPlayerMessage* Message = new UpdateClientPlayerMessage();
+            Message->from_bin(msData);
 
-            messagesServer_.push(clientReadyMessage);
+            messagesServer_.push(Message);
             break;
         }
         default:

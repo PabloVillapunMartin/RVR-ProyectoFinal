@@ -41,18 +41,22 @@ void PlayerSystem::recieve(const msg::Message& msg){
 	switch (msg.id)
 	{
 	case msg::_MOVE_:{
-		//Movimiento jugador
-		break;
-	}
-	case msg::_SHOOT_:{
-		//Disparo jugador
-		break;
-	}	
-	case msg::_BULLET_COLLISION_:{
-		//Colision bala jugador
+		msg::MoveMessage info = static_cast<const msg::MoveMessage&>(msg);
+		updatePlayerClient(info);
 		break;
 	}
 	default:
 		break;
+	}
+}
+
+void PlayerSystem::updatePlayerClient(msg::MoveMessage const& ms){
+	for(auto& player : players){
+		if(player->getComponent<IdGame>(ecs::IdGame)->id == ms.id_go){
+			Transform* tr = player->getComponent<Transform>(ecs::Transform);
+			tr->position_ = {ms.x, ms.y};
+			tr->rotation_ = ms.rotation;
+			break;
+		}
 	}
 }
