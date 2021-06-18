@@ -9,13 +9,14 @@ class Entity;
 using msgType = std::size_t;
 enum MsgId : msgType {
 	_network_,
-	_CONFIRMATION_LOGIN,
 	_LOG_IN_CLIENT,
+	_CONFIRMATION_LOGIN,
 	_START_GAME,
 	_CLIENT_READY,
 	_UPDATE_CLIENT_PLAYER,
 	_UPDATE_GAMEOBJECT,
-	_SHOOT,
+	_SHOOT_CLIENT,
+	_SHOOT_SERVER,
 	//
 	_last_MsgId_
 };
@@ -56,7 +57,7 @@ public:
 	Socket* clientSocket;
 };
 
-//Mensaje de confirmacion del servidor al cliente
+//Mensaje de confirmacion del servidor al cliente de logging
 class ConfirmationLoginMessage : public NetworkMessage {
 public:
 	ConfirmationLoginMessage(int id) : NetworkMessage(_CONFIRMATION_LOGIN), gameObjectID(id) {};
@@ -94,7 +95,7 @@ public:
 	int x4, y4;
 };
 
-//Mensaje de confirmacion del cliente al servidor
+//Mensaje de confirmacion del cliente al servidor 
 class ClientReadyMessage : public NetworkMessage {
 public:
 	ClientReadyMessage(int id) : NetworkMessage(_CLIENT_READY) {};
@@ -108,7 +109,7 @@ public:
 	void to_bin() override;
 };
 
-//Mensaje de confirmacion del cliente al servidor
+//Mensaje de actualizacion de input del clinte al servidor
 class UpdateClientPlayerMessage : public NetworkMessage {
 public:
 	UpdateClientPlayerMessage(int goid, int x_, int y_, float rotation_) : NetworkMessage(_UPDATE_CLIENT_PLAYER), x(x_), y(y_), go_id(goid), rotation(rotation_) {};
@@ -124,7 +125,7 @@ public:
 	int x, y, go_id;
 	float rotation;
 };
-//Mensaje de confirmacion del cliente al servidor
+//Mensaje de actualizacion de posicion de servidor a clientede un game object
 class UpdateGameObjectMessage : public NetworkMessage {
 public:
 	UpdateGameObjectMessage(int goid, int x_, int y_, float rotation_) : NetworkMessage(_UPDATE_GAMEOBJECT), x(x_), y(y_), go_id(goid), rotation(rotation_) {};
@@ -139,4 +140,34 @@ public:
 
 	int x, y, go_id;
 	float rotation;
+};
+//Mensaje de disparo, lo usa el cliente para indicarle al servidor la posicion en la que sea crea
+class ShootClientMessage : public NetworkMessage {
+public:
+	ShootClientMessage(int x_, int y_, int dirX_, int dirY_) : NetworkMessage(_SHOOT_CLIENT), x(x_), y(y_), dirX(dirX_), dirY(dirY_) {};
+
+	ShootClientMessage() : NetworkMessage(_SHOOT_CLIENT) {};
+
+	~ShootClientMessage(){}
+
+	int from_bin(char* data) override;
+
+	void to_bin() override;
+
+	int x, y, dirX, dirY;
+};
+//Mensaje de disparo, lo usa el servidor para decirle a los clientes que creen un go "bullet" asociado al id 
+class ShootServerMessages : public NetworkMessage {
+public:
+	ShootServerMessages(int x_, int y_, int id_) : NetworkMessage(_SHOOT_SERVER), x(x_), y(y_), idGo(id_) {};
+
+	ShootServerMessages() : NetworkMessage(_SHOOT_SERVER) {};
+
+	~ShootServerMessages(){}
+
+	int from_bin(char* data) override;
+
+	void to_bin() override;
+
+	int x, y, idGo;
 };

@@ -45,8 +45,6 @@ void PiumPiumMasterClient::initGame() {
 
 void PiumPiumMasterClient::closeGame() {
 	delete mngr_;
-	delete renderSystem_;
-	delete gameCtrlSystem_;
 }
 
 bool PiumPiumMasterClient::checkInput() {
@@ -54,38 +52,48 @@ bool PiumPiumMasterClient::checkInput() {
     ih->update();
     int x = 0, y = 0;
 	
-	
+	//Si hay algún evento de teclado o mouse
 	if (ih->keyDownEvent() || ih->mouseMotionEvent() || ih->mouseButtonEvent()) {
+		//Si el jugador sale de la app
 		if (ih->isKeyDown(SDLK_ESCAPE)) {
 			exit_ = true;
 			return false;
 		}
 		if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame &&
 			mngr_->getGroupEntities(ecs::_grp_Player).size() == 4) {
-			if (ih->isKeyDown(SDLK_w))         
-				y = -1 ;
-
-			if (ih->isKeyDown(SDLK_d)) 
-				x = 1; 
-
-			if (ih->isKeyDown(SDLK_a)) 
-				x = -1; 
-			
-			if (ih->isKeyDown(SDLK_s)) 
-				y = 1;
-
-			if(ih->getMouseButtonState(InputHandler::MOUSEBUTTON::LEFT)){
-				//Mensaje de bala
-			}
 
 			Vector2D posMouse = ih->getMousePos();
-			Vector2D dir = posMouse - mngr_->getGroupEntities(ecs::_grp_Player)[idClient_]->getComponent<Transform>(ecs::Transform)->position_;
+			Vector2D posPlayer = mngr_->getGroupEntities(ecs::_grp_Player)[idClient_]->getComponent<Transform>(ecs::Transform)->position_;
+			//Calculamos la direccion a la que mira el player
+			Vector2D dir = posMouse - posPlayer;
+
 			float rot = atan(dir.getY() / dir.getX()) * 180 / PI;
+			
+			//Check de movimiento arriba y abajo
+
+			if (ih->isKeyDown(SDLK_w))  	y = -1 ;
+
+			if (ih->isKeyDown(SDLK_d)) 		x = 1; 
+
+			if (ih->isKeyDown(SDLK_a)) 		x = -1; 
+			
+			if (ih->isKeyDown(SDLK_s))		y = 1;
+
+			//Check de disparo de bala
+			if(ih->getMouseButtonState(InputHandler::MOUSEBUTTON::LEFT)){
+				ShootClientMessage ms;
+
+				ms.dirX = dir.getX();		ms.dirY = dir.getY();
+				ms.x = posPlayer.getX();	ms.y = posPlayer.getY();
+
+				net_client->send(&ms);
+			}
+
+			//Mensaje update de input
 			UpdateClientPlayerMessage ms;
-			ms.go_id = idClient_;
-			ms.x = x; ms.y = y;
-			ms.rotation = rot - 90.0f;
-			if(posMouse.getX() > mngr_->getGroupEntities(ecs::_grp_Player)[idClient_]->getComponent<Transform>(ecs::Transform)->position_.getX()) ms.rotation += 180.0f;
+			ms.go_id = idClient_;	ms.x = x; 	ms.y = y;	ms.rotation = rot - 90.0f;
+			if ( posMouse.getX() > posPlayer.getX() ) ms.rotation += 180.0f;
+
 			net_client->send(&ms);
 		}	
 	}
@@ -137,13 +145,14 @@ void PiumPiumMasterClient::createGO(int x, int y, int id, int type){
 		tr->width_= 16; tr->height_ = 16;
 	}
 }
+
 void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id){
-	//Players
-	if(id < 4){
-		if(mngr_->getGroupEntities(ecs::_grp_Player).size() == 4){
-			Transform* tr = mngr_->getGroupEntities(ecs::_grp_Player)[id]->getComponent<Transform>(ecs::Transform);
+	for(auto& ent: mngr_->getEntities()){
+		if(ent->getComponent<IdGame>(ecs::IdGame) != nullptr && id == ent->getComponent<IdGame>(ecs::IdGame)->id){
+			Transform* tr = ent->getComponent<Transform>(ecs::Transform);
 			tr->position_ = {x, y};
 			tr->rotation_ = rot;
+			break;
 		}
 	}
 }

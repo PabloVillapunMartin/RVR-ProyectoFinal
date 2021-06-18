@@ -15,6 +15,7 @@
 #include "IdGame.h"
 #include "GameState.h"
 #include "GameCtrlSystem.h"
+#include "BulletSystem.h"
 
 using namespace std;
 
@@ -44,10 +45,8 @@ void PiumPiumMasterServer::initGame() {
 	renderSystem_ = mngr_->addSystem<RenderSystem>();
 	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>();
 
-	//BulletPool::init(40);
-	// ghostsSystem_ = mngr_->addSystem<GhostsSystem>();
-	// foodSystem_ = mngr_->addSystem<FoodSystem>();
-
+	BulletPool::init(40);
+	bulletSystem_ = mngr_->addSystem<BulletSystem>();
 	// pacmanSystem_ = mngr_->addSystem<PacManSystem>();
 	// collisionSystem_ = mngr_->addSystem<CollisionSystem>();
 	// audioSystem = mngr_->addSystem<AudioSystem>();
@@ -56,9 +55,6 @@ void PiumPiumMasterServer::initGame() {
 
 void PiumPiumMasterServer::closeGame() {
 	delete mngr_;
-	delete playerSystem_;
-	delete renderSystem_;
-	delete gameCtrlSystem_;
 }
 void PiumPiumMasterServer::sendObjectPositions(){
 	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame) {
@@ -91,6 +87,7 @@ void PiumPiumMasterServer::start(char* ip, char* port) {
 
 		mngr_->refresh();
 
+		bulletSystem_->update();
 		// collisionSystem_->update();
 
 		// this is needed for sending the messages!

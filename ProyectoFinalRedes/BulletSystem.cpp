@@ -11,7 +11,7 @@ void BulletSystem::shoot(Vector2D pos, Vector2D vel, double width, double height
 	if (e != nullptr) {
 		e->setActive(true);
 		e->addToGroup(ecs::_grp_Bullet);
-		game_->getAudioMngr()->playChannel(Resources::Bullet, 0, 1);
+		//game_->getAudioMngr()->playChannel(Resources::Bullet, 0, 1);
 	}
 }
 
