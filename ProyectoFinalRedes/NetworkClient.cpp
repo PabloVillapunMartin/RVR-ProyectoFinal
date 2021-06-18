@@ -9,7 +9,20 @@
 
 std::mutex mut;
 std::queue<NetworkMessage*> messages_;
+bool running;
 //========================================= CLIENT =============================================
+
+NetworkClient::~NetworkClient(){
+    mut.lock();
+    running = false;
+    mut.unlock();
+    incomingMessagesThread_.join();
+
+    while(!messages_.empty()){
+        delete messages_.front();
+        messages_.pop();
+    }
+}
 
 NetworkClient::NetworkClient(const char * direccion, const char * puerto, char* _playerName, PiumPiumMasterClient* game) : 
 socket_(direccion,puerto), 
@@ -19,14 +32,8 @@ gameClient(game)
 
 }
 
-NetworkClient::~NetworkClient(){
-    while(!messages_.empty()){
-        delete messages_.front();
-        messages_.pop();
-    }
-}
-
 void NetworkClient::start(){
+    running = true;
     incomingMessagesThread_ = std::thread(&NetworkClient::recieve_thread, this);
     login();
 }
@@ -114,6 +121,13 @@ void NetworkClient::recieve_thread(){
             std::cout << "[Client] Unknown message received\n";
             break;
         }
+
+        if(!running){
+            mut.unlock();
+            free(msData);
+            break;
+        }
+
         mut.unlock();
         free(msData);
     }

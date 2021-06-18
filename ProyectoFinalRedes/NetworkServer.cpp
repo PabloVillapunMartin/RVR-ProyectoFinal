@@ -7,11 +7,25 @@
 
 std::mutex mutServer;
 std::queue<NetworkMessage*> messagesServer_;
+bool runningServer;
 //================================ SERVER =======================================
+
+NetworkServer::~NetworkServer(){
+    mutServer.lock();
+    runningServer = false;
+    mutServer.unlock();
+    incomingMessagesThread_.join();
+
+    while(!messagesServer_.empty()){
+        delete messagesServer_.front();
+        messagesServer_.pop();
+    }
+}
 
 void NetworkServer::start(){
     std::cout << "[Server] Starting server\n";
     playersReady = 0;
+    runningServer = true;
     incomingMessagesThread_ = std::thread(&NetworkServer::recieve_thread, this);
 }
 
@@ -126,6 +140,13 @@ void NetworkServer::recieve_thread(){
         default:
             break;
         }
+
+        if(!runningServer){
+            free(msData);
+            mutServer.unlock();
+            break;
+        }
+
         mutServer.unlock();
         free(msData);
     }

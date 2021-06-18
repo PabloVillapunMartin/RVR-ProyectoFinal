@@ -16,6 +16,8 @@ public:
     {
         socket.bind();
     };
+
+    ~NetworkServer();
     
     void start();
     void proccessMessages();

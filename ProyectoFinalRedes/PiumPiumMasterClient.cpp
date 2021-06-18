@@ -27,6 +27,7 @@ PiumPiumMasterClient::PiumPiumMasterClient() :
 }
 
 PiumPiumMasterClient::~PiumPiumMasterClient() {
+	delete net_client;
 	closeGame();
 }
 
@@ -44,19 +45,23 @@ void PiumPiumMasterClient::initGame() {
 
 void PiumPiumMasterClient::closeGame() {
 	delete mngr_;
+	delete renderSystem_;
+	delete gameCtrlSystem_;
 }
 
 bool PiumPiumMasterClient::checkInput() {
     auto ih = InputHandler::instance();
     ih->update();
     int x = 0, y = 0;
-	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame) {
 	
-		if (ih->keyDownEvent() || ih->mouseMotionEvent() || ih->mouseButtonEvent()) {
-			if (ih->isKeyDown(SDLK_ESCAPE)) {
-				exit_ = true;
-				return false;
-			}
+	
+	if (ih->keyDownEvent() || ih->mouseMotionEvent() || ih->mouseButtonEvent()) {
+		if (ih->isKeyDown(SDLK_ESCAPE)) {
+			exit_ = true;
+			return false;
+		}
+		if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame &&
+			mngr_->getGroupEntities(ecs::_grp_Player).size() == 4) {
 			if (ih->isKeyDown(SDLK_w))         
 				y = -1 ;
 
@@ -79,9 +84,10 @@ bool PiumPiumMasterClient::checkInput() {
 			UpdateClientPlayerMessage ms;
 			ms.go_id = idClient_;
 			ms.x = x; ms.y = y;
-			ms.rotation = rot - 90;
+			ms.rotation = rot - 90.0f;
+			if(posMouse.getX() > mngr_->getGroupEntities(ecs::_grp_Player)[idClient_]->getComponent<Transform>(ecs::Transform)->position_.getX()) ms.rotation += 180.0f;
 			net_client->send(&ms);
-		}
+		}	
 	}
     return true;
 }

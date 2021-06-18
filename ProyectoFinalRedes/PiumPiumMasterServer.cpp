@@ -26,6 +26,7 @@ PiumPiumMasterServer::PiumPiumMasterServer() :
 }
 
 PiumPiumMasterServer::~PiumPiumMasterServer() {
+	delete net_server;
 	closeGame();
 }
 
@@ -55,6 +56,9 @@ void PiumPiumMasterServer::initGame() {
 
 void PiumPiumMasterServer::closeGame() {
 	delete mngr_;
+	delete playerSystem_;
+	delete renderSystem_;
+	delete gameCtrlSystem_;
 }
 void PiumPiumMasterServer::sendObjectPositions(){
 	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame) {
