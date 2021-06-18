@@ -22,9 +22,6 @@ enum CmpId : CmpIdType {
 };
 
 enum GrpId : GrpIdType {
-	_grp_Star,
-	_grp_Ghost,
-	_grp_Food,
 	_grp_Player,
 	_grp_Bullet,
 	//
@@ -34,7 +31,6 @@ enum GrpId : GrpIdType {
 };
 
 enum HdlrId : HdlrIdType {
-	_hdlr_PacManEntity,
 	_hdlr_GameStateEntity,
 	//
 	// don't touch the rest of this enum, it is to identify the max

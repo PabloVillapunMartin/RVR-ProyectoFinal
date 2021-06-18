@@ -2,6 +2,7 @@
 #include "SDLGame.h"
 #include "Manager.h"
 #include "messages.h"
+#include "GameState.h"
 #include <mutex>
 
 std::mutex mutServer;
@@ -28,6 +29,7 @@ void NetworkServer::proccessMessages(){
                 if(playersReady == 2){
                     StartGameMessage startGame(40, 40, 600, 40, 40, 440, 600, 440);
                     broadcastMessage(&startGame);
+                    SDLGame::instance()->getManager()->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state = GameState::inGame;
                 }
                 break;
             }
@@ -125,5 +127,6 @@ void NetworkServer::recieve_thread(){
             break;
         }
         mutServer.unlock();
+        free(msData);
     }
 }

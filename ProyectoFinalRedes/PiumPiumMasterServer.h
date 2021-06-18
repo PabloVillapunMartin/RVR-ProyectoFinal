@@ -8,6 +8,7 @@ class Manager;
 class SDLGame;
 class RenderSystem;
 class PlayerSystem;
+class GameCtrlSystem;
 
 class PiumPiumMasterServer {
 
@@ -35,6 +36,7 @@ private:
 	CollisionSystem *collisionSystem_;
 	RenderSystem *renderSystem_;
 	PlayerSystem *playerSystem_;
+	GameCtrlSystem *gameCtrlSystem_;
 
 	const static int _WINDOW_WIDTH_ = 640;
 	const static int _WINDOW_HEIGHT_ = 480;

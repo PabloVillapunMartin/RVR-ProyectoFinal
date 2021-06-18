@@ -13,6 +13,8 @@
 #include "BulletPool.h"
 #include "PlayerSystem.h"
 #include "IdGame.h"
+#include "GameState.h"
+#include "GameCtrlSystem.h"
 
 using namespace std;
 
@@ -39,6 +41,7 @@ void PiumPiumMasterServer::initGame() {
 	// // create the systems
 	playerSystem_=mngr_->addSystem<PlayerSystem>();
 	renderSystem_ = mngr_->addSystem<RenderSystem>();
+	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>();
 
 	//BulletPool::init(40);
 	// ghostsSystem_ = mngr_->addSystem<GhostsSystem>();
@@ -46,7 +49,6 @@ void PiumPiumMasterServer::initGame() {
 
 	// pacmanSystem_ = mngr_->addSystem<PacManSystem>();
 	// collisionSystem_ = mngr_->addSystem<CollisionSystem>();
-	// gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>();
 	// audioSystem = mngr_->addSystem<AudioSystem>();
 	// strawberrySystem = mngr_->addSystem<StrawberrySystem>();
 }
@@ -55,10 +57,12 @@ void PiumPiumMasterServer::closeGame() {
 	delete mngr_;
 }
 void PiumPiumMasterServer::sendObjectPositions(){
-	for(auto& players: mngr_->getGroupEntities(ecs::_grp_Player)){
-		Transform* tr = players->getComponent<Transform>(ecs::Transform);
-		UpdateGameObjectMessage update(players->getComponent<IdGame>(ecs::IdGame)->id, tr->position_.getX(), tr->position_.getY(), tr->rotation_);
-		net_server->broadcastMessage(&update);
+	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame) {
+		for(auto& players: mngr_->getGroupEntities(ecs::_grp_Player)){
+			Transform* tr = players->getComponent<Transform>(ecs::Transform);
+			UpdateGameObjectMessage update(players->getComponent<IdGame>(ecs::IdGame)->id, tr->position_.getX(), tr->position_.getY(), tr->rotation_);
+			net_server->broadcastMessage(&update);
+		}
 	}
 }
 void PiumPiumMasterServer::start(char* ip, char* port) {

@@ -115,5 +115,6 @@ void NetworkClient::recieve_thread(){
             break;
         }
         mut.unlock();
+        free(msData);
     }
 }

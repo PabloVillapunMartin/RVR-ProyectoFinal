@@ -79,7 +79,7 @@ bool PiumPiumMasterClient::checkInput() {
 			UpdateClientPlayerMessage ms;
 			ms.go_id = idClient_;
 			ms.x = x; ms.y = y;
-			ms.rotation = rot;
+			ms.rotation = rot - 90;
 			net_client->send(&ms);
 		}
 	}
@@ -134,8 +134,10 @@ void PiumPiumMasterClient::createGO(int x, int y, int id, int type){
 void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id){
 	//Players
 	if(id < 4){
-		Transform* tr = mngr_->getGroupEntities(ecs::_grp_Player)[id]->getComponent<Transform>(ecs::Transform);
-		tr->position_ = {x, y};
-		tr->rotation_ = rot;
+		if(mngr_->getGroupEntities(ecs::_grp_Player).size() == 4){
+			Transform* tr = mngr_->getGroupEntities(ecs::_grp_Player)[id]->getComponent<Transform>(ecs::Transform);
+			tr->position_ = {x, y};
+			tr->rotation_ = rot;
+		}
 	}
 }

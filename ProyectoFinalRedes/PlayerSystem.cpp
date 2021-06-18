@@ -54,7 +54,7 @@ void PlayerSystem::updatePlayerClient(msg::MoveMessage const& ms){
 	for(auto& player : players){
 		if(player->getComponent<IdGame>(ecs::IdGame)->id == ms.id_go){
 			Transform* tr = player->getComponent<Transform>(ecs::Transform);
-			tr->position_ = {ms.x, ms.y};
+			tr->position_ = {tr->position_.getX() + ms.x, tr->position_.getY() + ms.y};
 			tr->rotation_ = ms.rotation;
 			break;
 		}
