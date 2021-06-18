@@ -37,10 +37,10 @@ void NetworkServer::proccessMessages(){
         switch ((size_t)msg->id)
         {
             case MsgId::_CLIENT_READY :{
-                if(playersReady < 4) playersReady ++;
+                if(playersReady < 2) playersReady ++;
                 std::cout << "[Server] Players ready to play: "<< playersReady << "\n";
 
-                if(playersReady == 4){
+                if(playersReady == 2){
                     StartGameMessage startGame(40, 40, 600, 40, 40, 440, 600, 440);
                     broadcastMessage(&startGame);
                     SDLGame::instance()->getManager()->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state = GameState::inGame;
@@ -56,6 +56,13 @@ void NetworkServer::proccessMessages(){
                 UpdateClientPlayerMessage* ms = static_cast<UpdateClientPlayerMessage*>(msg);
                 SDLGame::instance()->getManager()->send<msg::MoveMessage>(ms->x, ms->y, ms->go_id, ms->rotation);
                 //std::cout << "UpdateClient info: " << ms->go_id << " | " << ms->x << ", " << ms->y << " | " << ms->rotation << '\n';
+                break;
+            }
+            case MsgId::_SHOOT_CLIENT :{
+                ShootClientMessage* ms = static_cast<ShootClientMessage*>(msg);
+                SDLGame::instance()->getManager()->send<msg::ShootMessage>(ms->x, ms->y, ms->dirX, ms->dirY);
+                // ShootServerMessages nms(ms->x,ms->y);
+		        // broadcastMessage(&nms);
                 break;
             }
             default:
@@ -136,6 +143,12 @@ void NetworkServer::recieve_thread(){
 
             messagesServer_.push(Message);
             break;
+        }
+        case MsgId::_SHOOT_CLIENT :{
+            ShootClientMessage* Message = new ShootClientMessage();
+            Message->from_bin(msData);
+
+            messagesServer_.push(Message);
         }
         default:
             break;

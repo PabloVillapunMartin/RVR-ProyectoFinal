@@ -25,8 +25,9 @@ namespace msg {
 	};
 
 	struct ShootMessage : public Message {
-		ShootMessage(int x, int y, int speed) : Message(_SHOOT_), x(x),y(y),speed(speed) {};
-		int x,y,speed;
+		ShootMessage(int x_, int y_, float dirX_, float dirY_) : Message(_SHOOT_), x(x_), y(y_), dirX(dirX_), dirY(dirY_) {};
+		int x,y;
+		float dirX, dirY;
 	};
 
 	struct MoveMessage : public Message {

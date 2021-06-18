@@ -5,7 +5,6 @@
 #include "Transform.h"
 #include "ImageComponent.h"
 #include "Resources.h"
-#include "IdGame.h"
 
 PlayerSystem::PlayerSystem() :
 		System(ecs::_sys_Player) 
@@ -18,7 +17,6 @@ void PlayerSystem::init(){
 		Transform* tr = ent->addComponent<Transform>();
 		tr->height_ = 32; tr->width_= 32;
 		ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Player));
-		ent->addComponent<IdGame>(ent->getEntityMngr()->getIdCount());
 		players.push_back(ent);
 		ent->addToGroup(ecs::_grp_Player);
 	}
@@ -51,12 +49,8 @@ void PlayerSystem::recieve(const msg::Message& msg){
 }
 
 void PlayerSystem::updatePlayerClient(msg::MoveMessage const& ms){
-	for(auto& player : players){
-		if(player->getComponent<IdGame>(ecs::IdGame)->id == ms.id_go){
-			Transform* tr = player->getComponent<Transform>(ecs::Transform);
-			tr->position_ = {tr->position_.getX() + ms.x, tr->position_.getY() + ms.y};
-			tr->rotation_ = ms.rotation;
-			break;
-		}
-	}
+
+	Transform* tr = players[ms.id_go]->getComponent<Transform>(ecs::Transform);
+	tr->position_ = {tr->position_.getX() + ms.x, tr->position_.getY() + ms.y};
+	tr->rotation_ = ms.rotation;
 }

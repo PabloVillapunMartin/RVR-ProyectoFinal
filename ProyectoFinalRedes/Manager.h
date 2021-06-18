@@ -106,9 +106,6 @@ public:
 		}
 	}
 
-	int getIdCount(){
-		return idCount++;
-	}
 private:
 	SDLGame *game_;
 	std::vector<uptr_ent> ents_;
@@ -119,5 +116,4 @@ private:
 	std::list<std::function<void()>> events_;
 	std::list<uptr_msg> *msgs_;
 
-	int idCount = 0;
 };

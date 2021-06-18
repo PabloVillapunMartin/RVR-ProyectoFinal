@@ -12,7 +12,6 @@
 #include "SDLGame.h"
 #include "BulletPool.h"
 #include "PlayerSystem.h"
-#include "IdGame.h"
 #include "GameState.h"
 #include "GameCtrlSystem.h"
 #include "BulletSystem.h"
@@ -45,8 +44,6 @@ void PiumPiumMasterServer::initGame() {
 	renderSystem_ = mngr_->addSystem<RenderSystem>();
 	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>();
 
-	BulletPool::init(40);
-	bulletSystem_ = mngr_->addSystem<BulletSystem>();
 	// pacmanSystem_ = mngr_->addSystem<PacManSystem>();
 	// collisionSystem_ = mngr_->addSystem<CollisionSystem>();
 	// audioSystem = mngr_->addSystem<AudioSystem>();
@@ -58,9 +55,14 @@ void PiumPiumMasterServer::closeGame() {
 }
 void PiumPiumMasterServer::sendObjectPositions(){
 	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame) {
-		for(auto& players: mngr_->getGroupEntities(ecs::_grp_Player)){
-			Transform* tr = players->getComponent<Transform>(ecs::Transform);
-			UpdateGameObjectMessage update(players->getComponent<IdGame>(ecs::IdGame)->id, tr->position_.getX(), tr->position_.getY(), tr->rotation_);
+		for(int i = 0; i <  mngr_->getGroupEntities(ecs::_grp_Player).size(); i++){
+			Transform* tr = mngr_->getGroupEntities(ecs::_grp_Player)[i]->getComponent<Transform>(ecs::Transform);
+			UpdateGameObjectMessage update(i, tr->position_.getX(), tr->position_.getY(), 0, tr->rotation_);
+			net_server->broadcastMessage(&update);
+		}
+		for(int i = 0; i <  mngr_->getGroupEntities(ecs::_grp_Bullet).size(); i++){
+			Transform* tr = mngr_->getGroupEntities(ecs::_grp_Bullet)[i]->getComponent<Transform>(ecs::Transform);
+			UpdateGameObjectMessage update(i, tr->position_.getX(), tr->position_.getY(), 1, tr->rotation_);
 			net_server->broadcastMessage(&update);
 		}
 	}
@@ -71,7 +73,8 @@ void PiumPiumMasterServer::start(char* ip, char* port) {
 	
 	net_server = new NetworkServer(ip, port);
 	net_server->start();
-
+	BulletPool::init(40);
+	bulletSystem_ = mngr_->addSystem<BulletSystem>(net_server);
 	while (!exit_) {
 		Uint32 startTime = game_->getTime();
 		SDL_RenderClear(game_->getRenderer());

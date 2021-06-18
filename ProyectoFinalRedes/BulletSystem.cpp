@@ -2,6 +2,8 @@
 #include "BulletPool.h"
 #include "Manager.h"
 #include "GameState.h"
+#include "NetworkMessages.h"
+#include "NetworkServer.h"
 
 
 //Crea una nueva bala dada la posicion y la velocidad a la que ha de ir
@@ -32,4 +34,19 @@ void BulletSystem::update()
 		}
 	}
 
+}
+
+void BulletSystem::recieve(const msg::Message& msg){
+	switch (msg.id)
+	{
+	case msg::_SHOOT_ :{
+		msg::ShootMessage info = static_cast<const msg::ShootMessage&>(msg);
+		shoot(Vector2D(info.x,info.y), Vector2D(info.dirX,info.dirY), 16, 16);
+		ShootServerMessages ms(info.x,info.y);
+		net->broadcastMessage(&ms);
+		break;
+	}
+	default:
+		break;
+	}
 }

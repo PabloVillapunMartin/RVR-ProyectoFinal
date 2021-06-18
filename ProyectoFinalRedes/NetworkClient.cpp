@@ -51,7 +51,7 @@ void NetworkClient::proccessMessages(){
         case MsgId::_CONFIRMATION_LOGIN:{
             ConfirmationLoginMessage* login = static_cast<ConfirmationLoginMessage*>(msg);
             gameClient->setID(login->gameObjectID); 
-            std::cout << "[Client] Login confirmed\n";
+            std::cout << "[Client] Login confirmed " << login->gameObjectID << "\n";
             ClientReadyMessage newMessage;
             send(&newMessage);
             std::cout << "[Client] Waiting for the players...\n";
@@ -60,10 +60,11 @@ void NetworkClient::proccessMessages(){
         case MsgId::_START_GAME :{
             std::cout << "[Client] Game has initialised\n";
             StartGameMessage* start = static_cast<StartGameMessage*>(msg);
-            gameClient->createGO(start->x1,start->y1,0,0);
-            gameClient->createGO(start->x2,start->y2,1,0);
-            gameClient->createGO(start->x3,start->y3,2,0);
-            gameClient->createGO(start->x4,start->y4,3,0);
+            gameClient->createPlayer(start->x1,start->y1);
+            gameClient->createPlayer(start->x2,start->y2);
+            gameClient->createPlayer(start->x3,start->y3);
+            gameClient->createPlayer(start->x4,start->y4);
+            gameClient->initPoolBullets();
 
 	        SDLGame::instance()->getManager()->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state = GameState::inGame;
 
@@ -71,7 +72,12 @@ void NetworkClient::proccessMessages(){
         }
         case MsgId::_UPDATE_GAMEOBJECT: {
             UpdateGameObjectMessage* ms = static_cast<UpdateGameObjectMessage*>(msg);
-            gameClient->updateGO(ms->x, ms->y, ms->rotation, ms->go_id);
+            gameClient->updateGO(ms->x, ms->y, ms->rotation, ms->go_id, ms->type);
+            break;
+        }
+        case MsgId::_SHOOT_SERVER: {
+            ShootServerMessages* ms = static_cast<ShootServerMessages*>(msg);
+            gameClient->createBullet(ms->x, ms->y);
             break;
         }
         default:
@@ -113,6 +119,12 @@ void NetworkClient::recieve_thread(){
         }
         case MsgId::_UPDATE_GAMEOBJECT: {
             UpdateGameObjectMessage* ms = new UpdateGameObjectMessage();
+            ms->from_bin(msData);
+            messages_.push(ms);
+            break;
+        }
+        case MsgId::_SHOOT_SERVER: {
+            ShootServerMessages* ms = new ShootServerMessages();
             ms->from_bin(msData);
             messages_.push(ms);
             break;

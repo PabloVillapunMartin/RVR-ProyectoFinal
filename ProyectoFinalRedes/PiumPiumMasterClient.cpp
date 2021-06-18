@@ -127,32 +127,42 @@ void PiumPiumMasterClient::start(char* ip, char* port, char* playerName) {
 	}
 }
 
-void PiumPiumMasterClient::createGO(int x, int y, int id, int type){
+void PiumPiumMasterClient::createPlayer(int x, int y){
+
 	Entity* ent = mngr_->addEntity();
 
 	Transform* tr = ent->addComponent<Transform>();
 	tr->position_ = {x,y};
-
-	ent->addComponent<IdGame>(ent->getEntityMngr()->getIdCount());
-	if(type == 0){
-		ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Player));
-		ent->addToGroup(ecs::_grp_Player);
-		tr->width_= 32; tr->height_ = 32;
-	}
-	else{
-		ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Bullet));
-		ent->addToGroup(ecs::_grp_Bullet);
-		tr->width_= 16; tr->height_ = 16;
-	}
+	ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Player));
+	ent->addToGroup(ecs::_grp_Player);
+	tr->width_= 32; tr->height_ = 32;
 }
+void PiumPiumMasterClient::createBullet(int x, int y){
+	Vector2D pos = {x,y};
+	Entity* e = mngr_->addEntity<BulletPool>(pos, Vector2D(), 16, 16);
+	if (e != nullptr) {
+		e->setActive(true);
+		e->addToGroup(ecs::_grp_Bullet);
+		//game_->getAudioMngr()->playChannel(Resources::Bullet, 0, 1);
+	}
 
-void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id){
-	for(auto& ent: mngr_->getEntities()){
-		if(ent->getComponent<IdGame>(ecs::IdGame) != nullptr && id == ent->getComponent<IdGame>(ecs::IdGame)->id){
+}
+void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id, int type){
+	if(type == 0){
+		if(mngr_->getGroupEntities(ecs::_grp_Player).size() == 4){
+			Entity* ent = mngr_->getGroupEntities(ecs::_grp_Player)[id];
 			Transform* tr = ent->getComponent<Transform>(ecs::Transform);
 			tr->position_ = {x, y};
 			tr->rotation_ = rot;
-			break;
 		}
 	}
+	else{
+		Entity* ent = mngr_->getGroupEntities(ecs::_grp_Bullet)[id];
+		Transform* tr = ent->getComponent<Transform>(ecs::Transform);
+		tr->position_ = {x, y};
+		tr->rotation_ = rot;
+	}	
+}
+void PiumPiumMasterClient::initPoolBullets(){
+	BulletPool::init(40);
 }

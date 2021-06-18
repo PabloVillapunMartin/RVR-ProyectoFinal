@@ -5,7 +5,6 @@
 #include "ObjectPool.h"
 #include "Singleton.h"
 #include "Transform.h"
-#include "IdGame.h"
 #include "Manager.h"
 
 
@@ -50,7 +49,6 @@ private:
 		for (Entity* e : pool_.getPool()) {
 			e->addComponent<Transform>();
 			e->addComponent<ImageComponent>(SDLGame::instance()->getTextureMngr()->getTexture(Resources::Bullet));
-            e->addComponent<IdGame>(SDLGame::instance()->getManager()->getIdCount());
 		}
 	}
 

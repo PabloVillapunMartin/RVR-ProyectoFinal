@@ -237,7 +237,7 @@ int UpdateClientPlayerMessage::from_bin(char* obj){
 }
 //////////////////////UPDATE GAME OBJECT/////////////////////////////////
 void UpdateGameObjectMessage::to_bin(){
-	int32_t messageSize = sizeof(MsgId) + 3 * sizeof(int) + sizeof(float);
+	int32_t messageSize = sizeof(MsgId) + 4 * sizeof(int) + sizeof(float);
 
 	alloc_data(messageSize);
 
@@ -257,11 +257,15 @@ void UpdateGameObjectMessage::to_bin(){
 	memcpy(bufferPointer, &y, sizeof(int));
 	bufferPointer += sizeof(int);
 
+	memcpy(bufferPointer, &type, sizeof(int));
+	bufferPointer += sizeof(int);
+
+
 	memcpy(bufferPointer, &rotation, sizeof(float));
 }
 
 int UpdateGameObjectMessage::from_bin(char* obj){
-	int32_t messageSize = sizeof(MsgId) + 3 * sizeof(int) + sizeof(float);
+	int32_t messageSize = sizeof(MsgId) + 4 * sizeof(int) + sizeof(float);
 	
 	alloc_data(messageSize);
 
@@ -281,13 +285,16 @@ int UpdateGameObjectMessage::from_bin(char* obj){
 	memcpy(&y, bufferPointer, sizeof(int));
 	bufferPointer += sizeof(int);
 
+	memcpy(&type, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
 	memcpy(&rotation, bufferPointer, sizeof(float));
 
 	return 0;
 }
 //////////////////////SHOOT CLIENT/////////////////////////////
 void ShootClientMessage::to_bin(){
-	int32_t messageSize = sizeof(MsgId) + 4 * sizeof(int);
+	int32_t messageSize = sizeof(MsgId) + 2 * sizeof(int) + 2 * sizeof(float);
 
 	alloc_data(messageSize);
 
@@ -304,15 +311,15 @@ void ShootClientMessage::to_bin(){
 	memcpy(bufferPointer, &y, sizeof(int));
 	bufferPointer += sizeof(int);
 
-	memcpy(bufferPointer, &dirX, sizeof(int));
+	memcpy(bufferPointer, &dirX, sizeof(float));
 	bufferPointer += sizeof(int);
 
-	memcpy(bufferPointer, &dirY, sizeof(int));
+	memcpy(bufferPointer, &dirY, sizeof(float));
 }
 
 int ShootClientMessage::from_bin(char* obj){
 
-	int32_t messageSize = sizeof(MsgId) + 4 * sizeof(int);
+	int32_t messageSize = sizeof(MsgId) + 2 * sizeof(int) + 2 * sizeof(float);
 	
 	alloc_data(messageSize);
 
@@ -329,16 +336,16 @@ int ShootClientMessage::from_bin(char* obj){
 	memcpy(&y, bufferPointer, sizeof(int));
 	bufferPointer += sizeof(int);
 
-	memcpy(&dirX, bufferPointer, sizeof(int));
+	memcpy(&dirX, bufferPointer, sizeof(float));
 	bufferPointer += sizeof(int);
 
-	memcpy(&dirY, bufferPointer, sizeof(int));
+	memcpy(&dirY, bufferPointer, sizeof(float));
 
 	return 0;
 }
 //////////////////////SHOOT SERVER/////////////////////////////
 void ShootServerMessages::to_bin(){
-	int32_t messageSize = sizeof(MsgId) + 3 * sizeof(int);
+	int32_t messageSize = sizeof(MsgId) + 2 * sizeof(int);
 
 	alloc_data(messageSize);
 
@@ -353,14 +360,11 @@ void ShootServerMessages::to_bin(){
 	bufferPointer += sizeof(int);
 
 	memcpy(bufferPointer, &y, sizeof(int));
-	bufferPointer += sizeof(int);
-
-	memcpy(bufferPointer, &idGo, sizeof(int));
 }
 
 int ShootServerMessages::from_bin(char* obj){
 
-	int32_t messageSize = sizeof(MsgId) + 3 * sizeof(int);
+	int32_t messageSize = sizeof(MsgId) + 2 * sizeof(int);
 	
 	alloc_data(messageSize);
 
@@ -375,9 +379,6 @@ int ShootServerMessages::from_bin(char* obj){
 	bufferPointer += sizeof(int);
 
 	memcpy(&y, bufferPointer, sizeof(int));
-	bufferPointer += sizeof(int);
-
-	memcpy(&idGo, bufferPointer, sizeof(int));
 
 	return 0;
 }

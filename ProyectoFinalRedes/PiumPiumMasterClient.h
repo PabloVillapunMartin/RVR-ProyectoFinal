@@ -21,8 +21,10 @@ public:
 	void stop();
 
 	inline void setID(int id){ idClient_ = id;}
-	void createGO(int x, int y, int id, int type);
-	void updateGO(int x, int y, float rot, int id);
+	void createPlayer(int x, int y);
+	void createBullet(int x, int y);
+	void initPoolBullets();
+	void updateGO(int x, int y, float rot, int id, int type);
 
 private:
 	void initGame();

@@ -128,7 +128,7 @@ public:
 //Mensaje de actualizacion de posicion de servidor a clientede un game object
 class UpdateGameObjectMessage : public NetworkMessage {
 public:
-	UpdateGameObjectMessage(int goid, int x_, int y_, float rotation_) : NetworkMessage(_UPDATE_GAMEOBJECT), x(x_), y(y_), go_id(goid), rotation(rotation_) {};
+	UpdateGameObjectMessage(int goid, int x_, int y_, int type_, float rotation_) : NetworkMessage(_UPDATE_GAMEOBJECT), x(x_), y(y_), go_id(goid), type(type_), rotation(rotation_){};
 
 	UpdateGameObjectMessage() : NetworkMessage(_UPDATE_GAMEOBJECT) {};
 
@@ -138,13 +138,13 @@ public:
 
 	void to_bin() override;
 
-	int x, y, go_id;
+	int x, y, go_id, type;
 	float rotation;
 };
 //Mensaje de disparo, lo usa el cliente para indicarle al servidor la posicion en la que sea crea
 class ShootClientMessage : public NetworkMessage {
 public:
-	ShootClientMessage(int x_, int y_, int dirX_, int dirY_) : NetworkMessage(_SHOOT_CLIENT), x(x_), y(y_), dirX(dirX_), dirY(dirY_) {};
+	ShootClientMessage(int x_, int y_, float dirX_, float dirY_) : NetworkMessage(_SHOOT_CLIENT), x(x_), y(y_), dirX(dirX_), dirY(dirY_) {};
 
 	ShootClientMessage() : NetworkMessage(_SHOOT_CLIENT) {};
 
@@ -154,12 +154,13 @@ public:
 
 	void to_bin() override;
 
-	int x, y, dirX, dirY;
+	int x, y;
+	float dirX, dirY;
 };
-//Mensaje de disparo, lo usa el servidor para decirle a los clientes que creen un go "bullet" asociado al id 
+//Mensaje de disparo, lo usa el servidor para decirle a los clientes que creen un go "bullet"
 class ShootServerMessages : public NetworkMessage {
 public:
-	ShootServerMessages(int x_, int y_, int id_) : NetworkMessage(_SHOOT_SERVER), x(x_), y(y_), idGo(id_) {};
+	ShootServerMessages(int x_, int y_) : NetworkMessage(_SHOOT_SERVER), x(x_), y(y_) {};
 
 	ShootServerMessages() : NetworkMessage(_SHOOT_SERVER) {};
 
@@ -169,5 +170,5 @@ public:
 
 	void to_bin() override;
 
-	int x, y, idGo;
+	int x, y;
 };
