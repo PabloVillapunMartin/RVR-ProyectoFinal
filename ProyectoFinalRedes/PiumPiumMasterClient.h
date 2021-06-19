@@ -46,4 +46,6 @@ private:
 	const static int _WINDOW_WIDTH_ = 640;
 	const static int _WINDOW_HEIGHT_ = 480;
 
+	//----- Input -------
+	bool up, down, right, left;
 };

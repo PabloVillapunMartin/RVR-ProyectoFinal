@@ -60,7 +60,7 @@ void CollisionSystem::update() {
 				Transform* wallTr = wall->getComponent<Transform>(ecs::Transform);
 
 				if(Collisions::collides(ptr->position_, ptr->width_, ptr->height_,
-							wallTr->position_, wallTr->width_, wallTr->height_)){
+					wallTr->position_, wallTr->width_, wallTr->height_)){
 					bullet->setActive(false);
 				}
 			}

@@ -22,7 +22,11 @@ using namespace std;
 PiumPiumMasterClient::PiumPiumMasterClient() :
 		game_(nullptr), //
 		mngr_(nullptr), //
-		exit_(false) {
+		exit_(false),
+		up(false),
+		down(false),
+		left(false), 
+		right(false) {
 	initGame();
 }
 
@@ -50,10 +54,9 @@ void PiumPiumMasterClient::closeGame() {
 bool PiumPiumMasterClient::checkInput() {
     auto ih = InputHandler::instance();
     ih->update();
-    int x = 0, y = 0;
 	
 	//Si hay algún evento de teclado o mouse
-	if (ih->keyDownEvent() || ih->mouseMotionEvent() || ih->mouseButtonEvent()) {
+	//if (ih->keyDownEvent() || ih->mouseMotionEvent() || ih->mouseButtonEvent()) {
 		//Si el jugador sale de la app
 		if (ih->isKeyDown(SDLK_ESCAPE)) {
 			exit_ = true;
@@ -72,13 +75,17 @@ bool PiumPiumMasterClient::checkInput() {
 			
 			//Check de movimiento arriba y abajo
 
-			if (ih->isKeyDown(SDLK_w))  	y = -1 ;
+			if (ih->isKeyDown(SDLK_w))  	up = true;
+			else if(ih->isKeyUp(SDLK_w))	up = false;
 
-			if (ih->isKeyDown(SDLK_d)) 		x = 1; 
+			if (ih->isKeyDown(SDLK_s)) 		down = true;
+			else if(ih->isKeyUp(SDLK_s))	down = false;
 
-			if (ih->isKeyDown(SDLK_a)) 		x = -1; 
+			if (ih->isKeyDown(SDLK_a)) 		left = true;
+			else if(ih->isKeyUp(SDLK_a))	left = false;
 			
-			if (ih->isKeyDown(SDLK_s))		y = 1;
+			if (ih->isKeyDown(SDLK_d))		right = true;
+			else if(ih->isKeyUp(SDLK_d))	right = false;
 
 			//Check de disparo de bala
 			if(ih->getMouseButtonState(InputHandler::MOUSEBUTTON::LEFT)){
@@ -91,14 +98,23 @@ bool PiumPiumMasterClient::checkInput() {
 				net_client->send(&ms);
 			}
 
+			int x = 0;
+			int y = 0;
+
+			if(up) y -= 1;
+			if(down) y += 1;
+			if(left) x -= 1;
+			if(right) x += 1;
+
 			//Mensaje update de input
+			int speed = 2;
 			UpdateClientPlayerMessage ms;
-			ms.go_id = idClient_;	ms.x = x; 	ms.y = y;	ms.rotation = rot - 90.0f;
+			ms.go_id = idClient_;	ms.x = x * 2; 	ms.y = y * 2;	ms.rotation = rot - 180.0f;
 			if ( posMouse.getX() > posPlayer.getX() ) ms.rotation += 180.0f;
 
 			net_client->send(&ms);
 		}	
-	}
+	//}
     return true;
 }
 void PiumPiumMasterClient::start(char* ip, char* port, char* playerName) {
@@ -143,7 +159,7 @@ void PiumPiumMasterClient::createPlayer(int x, int y){
 }
 void PiumPiumMasterClient::createBullet(int x, int y){
 	Vector2D pos = {x,y};
-	Entity* e = mngr_->addEntity<BulletPool>(pos, Vector2D(), 16, 16,0);
+	Entity* e = mngr_->addEntity<BulletPool>(pos, Vector2D(), 8, 8,0);
 	if (e != nullptr) {
 		e->setActive(true);
 		e->addToGroup(ecs::_grp_Bullet);

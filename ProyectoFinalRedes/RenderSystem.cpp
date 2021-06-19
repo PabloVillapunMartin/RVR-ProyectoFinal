@@ -21,9 +21,9 @@ piumpium(piumpium)
 }
 
 void RenderSystem::update() {
-	GameState* gamestate =  mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState);
+	GameState* gamestate =  mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState );
 	//------------------------------------------------inGame & onDeath------------------------------------------
-	if (gamestate->state == GameState::inGame || gamestate->state == GameState::ondeath) {
+	if (gamestate->state == GameState::inGame || gamestate->state == GameState::ondeath || gamestate->state == GameState::win) {
 		//Dibujamos el suelo
 		Texture* texture = game_->getTextureMngr()->getTexture(Resources::Suelo);
 		SDL_Rect rect;
@@ -74,7 +74,7 @@ void RenderSystem::update() {
 		}
 
 		//-------------------------------------------------- OnDeath -------------------------------------
-		if(mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::ondeath){
+		if(gamestate->state == GameState::ondeath){
 			Texture* texture = game_->getTextureMngr()->getTexture(Resources::DeathBackGround);
 			SDL_Rect rect;
 			rect.x = 0; rect.y = 0; rect.w = game_->getWindowWidth(); rect.h = game_->getWindowHeight();
@@ -87,13 +87,13 @@ void RenderSystem::update() {
 			texture->render(rect);
 		}
 		//-------------------------------------------------- OnWin -----------------------------------------
-			if(mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::win){
+		if(gamestate->state == GameState::win){
 			Texture* texture = game_->getTextureMngr()->getTexture(Resources::DeathBackGround);
 			SDL_Rect rect;
 			rect.x = 0; rect.y = 0; rect.w = game_->getWindowWidth(); rect.h = game_->getWindowHeight();
 			texture->render(rect);
 
-			texture = game_->getTextureMngr()->getTexture(Resources::GameOver);
+			texture = game_->getTextureMngr()->getTexture(Resources::Winner);
 			rect;
 			rect.x = game_->getWindowWidth() / 2 - game_->getWindowWidth() / 4; rect.y = 0; rect.w = game_->getWindowWidth() / 2; rect.h = 50;
 

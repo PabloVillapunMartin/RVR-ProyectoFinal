@@ -41,7 +41,7 @@ void BulletSystem::recieve(const msg::Message& msg){
 	{
 	case msg::_SHOOT_ :{
 		msg::ShootMessage info = static_cast<const msg::ShootMessage&>(msg);
-		shoot(Vector2D(info.x,info.y), Vector2D(info.dirX,info.dirY), 16, 16, info.idPlayer);
+		shoot(Vector2D(info.x,info.y), Vector2D(info.dirX,info.dirY), 8, 8, info.idPlayer);
 		ShootServerMessages ms(info.x,info.y);
 		net->broadcastMessage(&ms);
 		break;
