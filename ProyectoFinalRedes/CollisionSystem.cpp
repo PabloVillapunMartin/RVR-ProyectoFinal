@@ -21,7 +21,7 @@ void CollisionSystem::update() {
 	for (int i = 0; i < mngr_->getGroupEntities(ecs::_grp_Player).size(); i++) {
 
 		Entity* player = mngr_->getGroupEntities(ecs::_grp_Player)[i];
-		if(player->isActive()){
+		if(player->isVisible()){
 
 			Transform* ptr = player->getComponent<Transform>(ecs::Transform);
 

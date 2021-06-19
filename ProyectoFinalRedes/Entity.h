@@ -22,7 +22,8 @@ public:
 	Entity() :
 			game_(SDLGame::instance()), //
 			mngr_(nullptr), //
-			active_(true)
+			active_(true),
+			visible_(true)
 	{
 	}
 
@@ -43,6 +44,14 @@ public:
 
 	inline void setActive(bool active) {
 		active_ = active;
+	}
+	
+	inline bool isVisible() const {
+		return visible_;
+	}
+
+	inline void setVisible(bool active) {
+		visible_ = active;
 	}
 
 	template<typename T>
@@ -100,6 +109,7 @@ private:
 	std::bitset<ecs::maxGroups> groups_;
 
 	bool active_;
+	bool visible_;
 
 };
 

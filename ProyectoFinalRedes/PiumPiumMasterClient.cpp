@@ -136,7 +136,9 @@ void PiumPiumMasterClient::createPlayer(int x, int y){
 	tr->position_ = {x,y};
 	ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Player));
 	ent->addToGroup(ecs::_grp_Player);
+	ent->setVisible(true);
 	tr->width_= 32; tr->height_ = 32;
+
 }
 void PiumPiumMasterClient::createBullet(int x, int y){
 	Vector2D pos = {x,y};
@@ -155,6 +157,7 @@ void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id, int type, b
 			Transform* tr = ent->getComponent<Transform>(ecs::Transform);
 			tr->position_ = {x, y};
 			tr->rotation_ = rot;
+			ent->setVisible(active);
 		}
 	}
 	else{

@@ -34,8 +34,10 @@ void GameCtrlSystem::recieve(const msg::Message& msg){
 		//Restamos vida en el jugador que ha sido disparado
 		gameState_->life[info.id_player]--;
 		//En caso de matarlo, el jugador pasará a estar inactivo 
-		if(gameState_->life[info.id_player] <= 0)
-			mngr_->getGroupEntities(ecs::_grp_Player)[info.id_player]->setActive(false);
+		if(gameState_->life[info.id_player] <= 0){
+			Entity * e = mngr_->getGroupEntities(ecs::_grp_Player)[info.id_player];
+			e->setVisible(false);
+		}
 		//Sumamos puntos al jugador que ha disparado
 		int idPlayer = mngr_->getGroupEntities(ecs::_grp_Bullet)[info.id_bullet]->getComponent<BulletIDPlayer>(ecs::BulletIDPlayer)->idPlayer;
 		gameState_->points[idPlayer] += SHOOT_POINTS;

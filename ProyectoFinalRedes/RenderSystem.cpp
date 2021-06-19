@@ -23,10 +23,12 @@ void RenderSystem::update() {
 	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame ||
 		mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::ondeath) {
 		for(auto& ent: mngr_->getGroupEntities(ecs::_grp_Player)){
-			Transform *tr = ent->getComponent<Transform>(ecs::Transform);
-			ImageComponent *iC = ent->getComponent<ImageComponent>(ecs::ImageComponent);
-			SDL_Rect dest =	SDL_Rect{tr->position_.getX(), tr->position_.getY(), tr->width_, tr->height_};
-			iC->tex_->render(dest, tr->rotation_);
+			if(ent->isVisible()){
+				Transform *tr = ent->getComponent<Transform>(ecs::Transform);
+				ImageComponent *iC = ent->getComponent<ImageComponent>(ecs::ImageComponent);
+				SDL_Rect dest =	SDL_Rect{tr->position_.getX(), tr->position_.getY(), tr->width_, tr->height_};
+				iC->tex_->render(dest, tr->rotation_);
+			}
 		}
 		for(auto& ent: mngr_->getGroupEntities(ecs::_grp_Bullet)){
 			if(ent->isActive()){
@@ -44,14 +46,15 @@ void RenderSystem::update() {
 
 			texture = game_->getTextureMngr()->getTexture(Resources::GameOver);
 			rect;
-			rect.x = game_->getWindowWidth() / 2; rect.y = 20; rect.w = game_->getWindowWidth() / 3; rect.h = 50;
+			rect.x = game_->getWindowWidth() / 2 - game_->getWindowWidth() / 4; rect.y = 0; rect.w = game_->getWindowWidth() / 2; rect.h = 50;
+
 			texture->render(rect);
 		}
 	}
 	else{
 		Texture* texture = game_->getTextureMngr()->getTexture(Resources::WaitingForPlayers);
 		SDL_Rect rect;
-		rect.x = game_->getWindowWidth() / 2; rect.y = 20; rect.w = game_->getWindowWidth() / 3; rect.h = 50;
+		rect.x = game_->getWindowWidth() / 2 - game_->getWindowWidth() / 4; rect.y = 0; rect.w = game_->getWindowWidth() / 2; rect.h = 50;
 		texture->render(rect);
 	}
 }
