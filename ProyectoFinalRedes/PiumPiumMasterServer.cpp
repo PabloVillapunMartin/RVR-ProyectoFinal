@@ -33,7 +33,7 @@ PiumPiumMasterServer::~PiumPiumMasterServer() {
 
 
 void PiumPiumMasterServer::initGame(char* ip, char* port) {
-	game_ = SDLGame::init("PiumPiumMasterServer", _WINDOW_WIDTH_, _WINDOW_HEIGHT_);
+	game_ = SDLGame::init("PiumPiumMasterServer", _WINDOW_WIDTH_, _WINDOW_HEIGHT_, false);
 
 	// create the manager
 	mngr_ = new Manager(game_);

@@ -37,7 +37,7 @@ PiumPiumMasterClient::~PiumPiumMasterClient() {
 
 void PiumPiumMasterClient::initGame() {
 
-	game_ = SDLGame::init("PiumPiumMaster", _WINDOW_WIDTH_, _WINDOW_HEIGHT_);
+	game_ = SDLGame::init("PiumPiumMaster", _WINDOW_WIDTH_, _WINDOW_HEIGHT_, true);
 
 	// create the manager
 	mngr_ = new Manager(game_);

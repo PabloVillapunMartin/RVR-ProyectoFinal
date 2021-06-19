@@ -23,9 +23,9 @@ public:
 	SDLGame(SDLGame&) = delete;
 	SDLGame& operator=(SDLGame&) = delete;
 
-	inline static SDLGame* init(string windowTitle, int width, int height) {
+	inline static SDLGame* init(string windowTitle, int width, int height, bool initWindow = true) {
 		assert(instance_.get() == nullptr);
-		instance_.reset(new SDLGame(windowTitle, width, height));
+		instance_.reset(new SDLGame(windowTitle, width, height, initWindow));
 		return instance_.get();
 	}
 
@@ -90,9 +90,9 @@ public:
 	}
 
 private:
-	SDLGame(string windowTitle_, int width, int height);
+	SDLGame(string windowTitle_, int width, int height, bool initWindow = true);
 
-	void initSDL(); // initialize SDL
+	void initSDL(bool initWindow = true); // initialize SDL
 	void closeSDL(); // close SDL
 	void initResources(); // initialize the SDLResources object with the data at the top of this file
 	void closeResources(); // close the SDLResources object (frees all memory)

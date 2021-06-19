@@ -12,9 +12,9 @@
 unique_ptr<SDLGame> SDLGame::instance_;
 
 
-SDLGame::SDLGame(string windowTitle, int width, int height) :
+SDLGame::SDLGame(string windowTitle, int width, int height, bool initWindow) :
 		windowTitle_(windowTitle), width_(width), height_(height) {
-	initSDL();
+	initSDL(initWindow);
 	initResources();
 }
 
@@ -23,12 +23,13 @@ SDLGame::~SDLGame() {
 	closeSDL();
 }
 
-void SDLGame::initSDL() {
+void SDLGame::initSDL(bool initWindow) {
 
 	int sdlInit_ret = SDL_Init(SDL_INIT_EVERYTHING);
 	assert(sdlInit_ret == 0);
 
 	// Create window
+	if(!initWindow) return;
 	window_ = SDL_CreateWindow(windowTitle_.c_str(),
 	SDL_WINDOWPOS_UNDEFINED,
 	SDL_WINDOWPOS_UNDEFINED, width_, height_, SDL_WINDOW_SHOWN);
