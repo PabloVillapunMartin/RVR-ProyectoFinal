@@ -9,6 +9,7 @@ class Manager;
 class SDLGame;
 class RenderSystem;
 class GameCtrlSystem;
+class BulletPool;
 
 class PiumPiumMasterClient {
 
@@ -23,7 +24,6 @@ public:
 	
 	void createPlayer(int x, int y);
 	void createBullet(int x, int y);
-	void initPoolBullets();
 	void createWalls();
 	void updateGO(int x, int y, float rot, int id, int type, bool active);
 
@@ -41,6 +41,7 @@ private:
 
 	RenderSystem *renderSystem_;
 	GameCtrlSystem *gameCtrlSystem_;
+	BulletPool* pool;
 
 	int idClient_;
 	const static int _WINDOW_WIDTH_ = 640;

@@ -26,7 +26,8 @@ PiumPiumMasterClient::PiumPiumMasterClient() :
 		up(false),
 		down(false),
 		left(false), 
-		right(false) {
+		right(false),
+		pool(nullptr) {
 	initGame();
 }
 
@@ -39,16 +40,17 @@ void PiumPiumMasterClient::initGame() {
 
 	game_ = SDLGame::init("PiumPiumMaster", _WINDOW_WIDTH_, _WINDOW_HEIGHT_, true);
 
-	// create the manager
+	// create the managerB
 	mngr_ = new Manager(game_);
 	game_->setManager(mngr_);
-	renderSystem_ = mngr_->addSystem<RenderSystem>(this);
-	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(nullptr, this);
-
+	pool = new BulletPool(40);
+	renderSystem_ = mngr_->addSystem<RenderSystem>(this, pool);
+	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(nullptr, pool, this);
 }
 
 void PiumPiumMasterClient::closeGame() {
 	delete mngr_;
+	delete pool;
 }
 
 bool PiumPiumMasterClient::checkInput() {
@@ -109,7 +111,7 @@ bool PiumPiumMasterClient::checkInput() {
 			//Mensaje update de input
 			int speed = 2;
 			UpdateClientPlayerMessage ms;
-			ms.go_id = idClient_;	ms.x = x * 2; 	ms.y = y * 2;	ms.rotation = rot - 180.0f;
+			ms.go_id = idClient_;	ms.x = x; 	ms.y = y;	ms.rotation = rot - 180.0f;
 			if ( posMouse.getX() > posPlayer.getX() ) ms.rotation += 180.0f;
 
 			net_client->send(&ms);
@@ -159,10 +161,12 @@ void PiumPiumMasterClient::createPlayer(int x, int y){
 }
 void PiumPiumMasterClient::createBullet(int x, int y){
 	Vector2D pos = {x,y};
-	Entity* e = mngr_->addEntity<BulletPool>(pos, Vector2D(), 8, 8,0);
+	Entity* e = pool->getBullet();
 	if (e != nullptr) {
-		e->setActive(true);
-		e->addToGroup(ecs::_grp_Bullet);
+		e->setVisible(true);
+		Transform* tr = e->getComponent<Transform>(ecs::Transform);
+		tr->position_= {x,y};
+		tr->height_ = 8; tr->width_=8;
 		//game_->getAudioMngr()->playChannel(Resources::Bullet, 0, 1);
 	}
 
@@ -192,15 +196,13 @@ void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id, int type, b
 		}
 	}
 	else{
-		if(mngr_->getGroupEntities(ecs::_grp_Bullet).size() > id){
-			Entity* ent = mngr_->getGroupEntities(ecs::_grp_Bullet)[id];
+		if(pool){
+			Entity* ent = pool->getPool()[id];
 			Transform* tr = ent->getComponent<Transform>(ecs::Transform);
 			tr->position_ = {x, y};
 			tr->rotation_ = rot;
-			ent->setActive(active);
+			if(active == false) 
+				pool->deleteBullet(ent);
 		}
 	}	
-}
-void PiumPiumMasterClient::initPoolBullets(){
-	BulletPool::init(40);
 }

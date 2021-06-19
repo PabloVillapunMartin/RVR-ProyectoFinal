@@ -23,7 +23,6 @@ enum CmpId : CmpIdType {
 
 enum GrpId : GrpIdType {
 	_grp_Player,
-	_grp_Bullet,
 	_grp_Walls,
 	//
 	// don't touch the rest of this enum, it is to identify the max

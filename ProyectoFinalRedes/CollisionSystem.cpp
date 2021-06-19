@@ -7,8 +7,10 @@
 #include "BulletIDPlayer.h"
 
 
-CollisionSystem::CollisionSystem() :
-		System(ecs::_sys_Collisions) {
+CollisionSystem::CollisionSystem(BulletPool* pool) :
+System(ecs::_sys_Collisions),
+pool(pool)
+{
 }
 
 void CollisionSystem::update() {
@@ -25,12 +27,12 @@ void CollisionSystem::update() {
 			Transform* ptr = player->getComponent<Transform>(ecs::Transform);
 
 			//Comprobacion con las balas
-			for (int j = 0; j < mngr_->getGroupEntities(ecs::_grp_Bullet).size(); j++) {
+			for (int j = 0; j < pool->getPool().size(); j++) {
 
-				Entity* bullet = mngr_->getGroupEntities(ecs::_grp_Bullet)[j];
+				Entity* bullet = pool->getPool()[j];
 				Transform* etr = bullet->getComponent<Transform>(ecs::Transform);
 				BulletIDPlayer* idP = bullet->getComponent<BulletIDPlayer>(ecs::BulletIDPlayer);
-				if(bullet->isActive() && idP->idPlayer != i){
+				if(bullet->isVisible() && idP->idPlayer != i){
 					if (Collisions::collides(ptr->position_, ptr->width_, ptr->height_,
 							etr->position_, etr->width_, etr->height_)) {
 						mngr_->send<msg::BulletCollisionMessage>(j,i);
@@ -50,18 +52,18 @@ void CollisionSystem::update() {
 		}
 	}
 	//Comprobacion con las balas
-	for (int i = 0; i < mngr_->getGroupEntities(ecs::_grp_Bullet).size(); i++) {
+	for (int i = 0; i < pool->getPool().size(); i++) {
 
-		Entity* bullet = mngr_->getGroupEntities(ecs::_grp_Bullet)[i];
+		Entity* bullet = pool->getPool()[i];
 		Transform* ptr = bullet->getComponent<Transform>(ecs::Transform);
-		if(bullet->isActive()){
+		if(bullet->isVisible()){
 			//Comprobacion con paredes
 			for(auto& wall : mngr_->getGroupEntities(ecs::_grp_Walls)){
 				Transform* wallTr = wall->getComponent<Transform>(ecs::Transform);
 
 				if(Collisions::collides(ptr->position_, ptr->width_, ptr->height_,
 					wallTr->position_, wallTr->width_, wallTr->height_)){
-					bullet->setActive(false);
+					pool->deleteBullet(bullet);
 				}
 			}
 		}

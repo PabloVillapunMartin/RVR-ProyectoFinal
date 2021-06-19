@@ -38,16 +38,16 @@ void PiumPiumMasterServer::initGame(char* ip, char* port) {
 	// create the manager
 	mngr_ = new Manager(game_);
 	game_->setManager(mngr_);
+	
+	pool = new BulletPool(40);
 
 	net_server = new NetworkServer(ip, port);
 	net_server->start();
 	// // create the systems
 	playerSystem_=mngr_->addSystem<PlayerSystem>();
-	renderSystem_ = mngr_->addSystem<RenderSystem>();
-	collisionSystem_ = mngr_->addSystem<CollisionSystem>();
-	BulletPool::init(40);
-	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(net_server);
-	bulletSystem_ = mngr_->addSystem<BulletSystem>(net_server);
+	collisionSystem_ = mngr_->addSystem<CollisionSystem>(pool);
+	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(net_server, pool);
+	bulletSystem_ = mngr_->addSystem<BulletSystem>(net_server, pool);
 	createWalls();
 
 	// pacmanSystem_ = mngr_->addSystem<PacManSystem>();
@@ -79,9 +79,9 @@ void PiumPiumMasterServer::sendObjectPositions(){
 			UpdateGameObjectMessage update(i, tr->position_.getX(), tr->position_.getY(), 0, tr->rotation_,player->isVisible());
 			net_server->broadcastMessage(&update);
 		}
-		for(int i = 0; i <  mngr_->getGroupEntities(ecs::_grp_Bullet).size(); i++){
-			Transform* tr = mngr_->getGroupEntities(ecs::_grp_Bullet)[i]->getComponent<Transform>(ecs::Transform);
-			UpdateGameObjectMessage update(i, tr->position_.getX(), tr->position_.getY(), 1, tr->rotation_, mngr_->getGroupEntities(ecs::_grp_Bullet)[i]->isActive());
+		for(int i = 0; i < pool->getPool().size(); i++){
+			Transform* tr = pool->getPool()[i]->getComponent<Transform>(ecs::Transform);
+			UpdateGameObjectMessage update(i, tr->position_.getX(), tr->position_.getY(), 1, tr->rotation_, pool->getPool()[i]->isVisible());
 			net_server->broadcastMessage(&update);
 		}
 	}
@@ -112,6 +112,7 @@ void PiumPiumMasterServer::start() {
 		net_server->proccessMessages();
 		mngr_->flushMessages();
 
+		std::cout << pool->getNotUsed() << "\n";
 		sendObjectPositions();
 
 		SDL_RenderPresent(game_->getRenderer());

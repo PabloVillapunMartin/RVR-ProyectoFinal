@@ -7,11 +7,12 @@
 #include "BulletIDPlayer.h"
 
 
-GameCtrlSystem::GameCtrlSystem(NetworkServer* server, PiumPiumMasterClient* client) :
+GameCtrlSystem::GameCtrlSystem(NetworkServer* server, BulletPool* pool,PiumPiumMasterClient* client) :
 System(ecs::_sys_GameCtrl), //
 gameState_(nullptr),		//
 net_server(server),			//
-client(client)				//
+client(client),				//
+pool(pool)					//
 {
 }
 
@@ -39,7 +40,7 @@ void GameCtrlSystem::recieve(const msg::Message& msg){
 			e->setVisible(false);
 		}
 		//Sumamos puntos al jugador que ha disparado
-		int idPlayer = mngr_->getGroupEntities(ecs::_grp_Bullet)[info.id_bullet]->getComponent<BulletIDPlayer>(ecs::BulletIDPlayer)->idPlayer;
+		int idPlayer = pool->getPool()[info.id_bullet]->getComponent<BulletIDPlayer>(ecs::BulletIDPlayer)->idPlayer;
 		gameState_->points[idPlayer] += SHOOT_POINTS;
 		//Enviamos a los clientes la informacion necesaria
 		if(net_server){

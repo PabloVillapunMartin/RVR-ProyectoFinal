@@ -1,61 +1,54 @@
 #pragma once
 #include "ecs.h"
 #include "Entity.h"
-#include "ImageComponent.h"
-#include "ObjectPool.h"
-#include "Singleton.h"
-#include "Transform.h"
 #include "Manager.h"
+#include "Transform.h"
+#include "SDLGame.h"
+#include "ImageComponent.h"
 #include "BulletIDPlayer.h"
 
-class BulletPool : public Singleton<BulletPool> {
-	friend Singleton<BulletPool>;
+#include <queue>
+
+class BulletPool {
 public:
-	virtual ~BulletPool() {
-	}
-
-	template<typename ...Targs>
-	inline static Entity* construct(Targs&&...args) {
-		return BulletPool::instance()->construct_(std::forward<Targs>(args)...);
-	}
-
-	inline static void destroy(Entity* p) {
-		BulletPool::instance()->destroy_(p);
-	}
-
-	inline Entity* construct_(Vector2D pos, Vector2D vel, double w, double h, int idP) {
-		Entity* e = pool_.getObj();
-		if (e != nullptr) {
-			e->setActive(true);
-			Transform* tr = e->getComponent<Transform>(ecs::Transform);
-			tr->velocity_.set(vel);
-			tr->position_.set(pos);
-			tr->width_ = w;
-			tr->height_ = h;
-
-			BulletIDPlayer* b = e->getComponent<BulletIDPlayer>(ecs::BulletIDPlayer);
-			b->idPlayer = idP;
-
-		}
-		return e;
-	}
-
-	inline void destroy_(Entity* p) {
-		pool_.relObj(p);
-	}
-
-private:
-	BulletPool() :
-		BulletPool(10) {
-	}
 	BulletPool(std::size_t n) :
-		pool_(n) {
-		for (Entity* e : pool_.getPool()) {
+		pool_() {
+		for (int i = 0; i < n; i++) {
+			Entity* e = SDLGame::instance()->getManager()->addEntity();
 			e->addComponent<Transform>();
 			e->addComponent<ImageComponent>(SDLGame::instance()->getTextureMngr()->getTexture(Resources::Bullet));
 			e->addComponent<BulletIDPlayer>();
+			e->setVisible(false);
+			notUsed_.push(e);
+			pool_.push_back(e);
 		}
 	}
+	~BulletPool(){
+		
+	}
 
-	ObjectPool<Entity> pool_;
+	Entity* getBullet(){
+		if(!notUsed_.empty()){
+			Entity* e  = notUsed_.front(); notUsed_.pop();
+			e->setVisible(true);
+			return e;
+		}
+		else return nullptr;
+	}
+	void deleteBullet(Entity* e){
+		if(e->isVisible()){
+			notUsed_.push(e);
+			e->setVisible(false);
+		}
+	}
+	std::vector<Entity*>& getPool(){
+		return pool_;
+	}
+	int getNotUsed(){
+		return notUsed_.size();
+	}
+
+private:
+	std::vector<Entity*> pool_;
+	std::queue<Entity*> notUsed_;
 };

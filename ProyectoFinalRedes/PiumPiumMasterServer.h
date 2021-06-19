@@ -11,6 +11,7 @@ class PlayerSystem;
 class GameCtrlSystem;
 class BulletSystem;
 class CollisionSystem;
+class BulletPool;
 
 class PiumPiumMasterServer {
 
@@ -35,9 +36,9 @@ private:
 	Manager *mngr_;
 	bool exit_;
 	NetworkServer* net_server;
+	BulletPool* pool;
 
 	CollisionSystem *collisionSystem_;
-	RenderSystem *renderSystem_;
 	PlayerSystem *playerSystem_;
 	GameCtrlSystem *gameCtrlSystem_;
 	BulletSystem *bulletSystem_;

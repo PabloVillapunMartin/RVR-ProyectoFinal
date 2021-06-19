@@ -64,7 +64,6 @@ void NetworkClient::proccessMessages(){
             gameClient->createPlayer(start->x2,start->y2);
             gameClient->createPlayer(start->x3,start->y3);
             gameClient->createPlayer(start->x4,start->y4);
-            gameClient->initPoolBullets();
             gameClient->createWalls();
 
 	        SDLGame::instance()->getManager()->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state = GameState::inGame;
