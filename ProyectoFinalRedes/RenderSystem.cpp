@@ -28,10 +28,12 @@ void RenderSystem::update() {
 			iC->tex_->render(dest, tr->rotation_);
 		}
 		for(auto& ent: mngr_->getGroupEntities(ecs::_grp_Bullet)){
-			Transform *tr = ent->getComponent<Transform>(ecs::Transform);
-			ImageComponent *iC = ent->getComponent<ImageComponent>(ecs::ImageComponent);
-			SDL_Rect dest =	SDL_Rect{tr->position_.getX(), tr->position_.getY(), tr->width_, tr->height_};
-			iC->tex_->render(dest, tr->rotation_);
+			if(ent->isActive()){
+				Transform *tr = ent->getComponent<Transform>(ecs::Transform);
+				ImageComponent *iC = ent->getComponent<ImageComponent>(ecs::ImageComponent);
+				SDL_Rect dest =	SDL_Rect{tr->position_.getX(), tr->position_.getY(), tr->width_, tr->height_};
+				iC->tex_->render(dest, tr->rotation_);
+			}
 		}
 	}
 	else{

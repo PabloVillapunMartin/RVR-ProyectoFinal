@@ -237,7 +237,7 @@ int UpdateClientPlayerMessage::from_bin(char* obj){
 }
 //////////////////////UPDATE GAME OBJECT/////////////////////////////////
 void UpdateGameObjectMessage::to_bin(){
-	int32_t messageSize = sizeof(MsgId) + 4 * sizeof(int) + sizeof(float);
+	int32_t messageSize = sizeof(MsgId) + 4 * sizeof(int) + sizeof(float) + sizeof(bool);
 
 	alloc_data(messageSize);
 
@@ -260,12 +260,14 @@ void UpdateGameObjectMessage::to_bin(){
 	memcpy(bufferPointer, &type, sizeof(int));
 	bufferPointer += sizeof(int);
 
-
 	memcpy(bufferPointer, &rotation, sizeof(float));
+	bufferPointer += sizeof(float);
+
+	memcpy(bufferPointer, &active, sizeof(bool));
 }
 
 int UpdateGameObjectMessage::from_bin(char* obj){
-	int32_t messageSize = sizeof(MsgId) + 4 * sizeof(int) + sizeof(float);
+	int32_t messageSize = sizeof(MsgId) + 4 * sizeof(int) + sizeof(float) + sizeof(bool);
 	
 	alloc_data(messageSize);
 
@@ -289,7 +291,9 @@ int UpdateGameObjectMessage::from_bin(char* obj){
 	bufferPointer += sizeof(int);
 
 	memcpy(&rotation, bufferPointer, sizeof(float));
+	bufferPointer += sizeof(float);
 
+	memcpy(&active, bufferPointer, sizeof(bool));
 	return 0;
 }
 //////////////////////SHOOT CLIENT/////////////////////////////

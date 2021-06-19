@@ -72,7 +72,7 @@ void NetworkClient::proccessMessages(){
         }
         case MsgId::_UPDATE_GAMEOBJECT: {
             UpdateGameObjectMessage* ms = static_cast<UpdateGameObjectMessage*>(msg);
-            gameClient->updateGO(ms->x, ms->y, ms->rotation, ms->go_id, ms->type);
+            gameClient->updateGO(ms->x, ms->y, ms->rotation, ms->go_id, ms->type,ms->active);
             break;
         }
         case MsgId::_SHOOT_SERVER: {

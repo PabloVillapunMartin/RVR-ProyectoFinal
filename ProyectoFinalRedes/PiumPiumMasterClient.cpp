@@ -65,7 +65,7 @@ bool PiumPiumMasterClient::checkInput() {
 			Vector2D posMouse = ih->getMousePos();
 			Vector2D posPlayer = mngr_->getGroupEntities(ecs::_grp_Player)[idClient_]->getComponent<Transform>(ecs::Transform)->position_;
 			//Calculamos la direccion a la que mira el player
-			Vector2D dir = posMouse - posPlayer;
+			Vector2D dir = (posMouse - posPlayer).normalize();
 
 			float rot = atan(dir.getY() / dir.getX()) * 180 / PI;
 			
@@ -147,7 +147,7 @@ void PiumPiumMasterClient::createBullet(int x, int y){
 	}
 
 }
-void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id, int type){
+void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id, int type, bool active){
 	if(type == 0){
 		if(mngr_->getGroupEntities(ecs::_grp_Player).size() == 4){
 			Entity* ent = mngr_->getGroupEntities(ecs::_grp_Player)[id];
@@ -161,6 +161,7 @@ void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id, int type){
 		Transform* tr = ent->getComponent<Transform>(ecs::Transform);
 		tr->position_ = {x, y};
 		tr->rotation_ = rot;
+		ent->setActive(active);
 	}	
 }
 void PiumPiumMasterClient::initPoolBullets(){

@@ -128,7 +128,8 @@ public:
 //Mensaje de actualizacion de posicion de servidor a clientede un game object
 class UpdateGameObjectMessage : public NetworkMessage {
 public:
-	UpdateGameObjectMessage(int goid, int x_, int y_, int type_, float rotation_) : NetworkMessage(_UPDATE_GAMEOBJECT), x(x_), y(y_), go_id(goid), type(type_), rotation(rotation_){};
+	UpdateGameObjectMessage(int goid, int x_, int y_, int type_, float rotation_, bool active_) : NetworkMessage(_UPDATE_GAMEOBJECT), x(x_), y(y_), 
+	go_id(goid), type(type_), rotation(rotation_), active(active_){};
 
 	UpdateGameObjectMessage() : NetworkMessage(_UPDATE_GAMEOBJECT) {};
 
@@ -140,6 +141,7 @@ public:
 
 	int x, y, go_id, type;
 	float rotation;
+	bool active;
 };
 //Mensaje de disparo, lo usa el cliente para indicarle al servidor la posicion en la que sea crea
 class ShootClientMessage : public NetworkMessage {

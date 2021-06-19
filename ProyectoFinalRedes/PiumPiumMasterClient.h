@@ -24,7 +24,7 @@ public:
 	void createPlayer(int x, int y);
 	void createBullet(int x, int y);
 	void initPoolBullets();
-	void updateGO(int x, int y, float rot, int id, int type);
+	void updateGO(int x, int y, float rot, int id, int type, bool active);
 
 private:
 	void initGame();

@@ -57,12 +57,12 @@ void PiumPiumMasterServer::sendObjectPositions(){
 	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame) {
 		for(int i = 0; i <  mngr_->getGroupEntities(ecs::_grp_Player).size(); i++){
 			Transform* tr = mngr_->getGroupEntities(ecs::_grp_Player)[i]->getComponent<Transform>(ecs::Transform);
-			UpdateGameObjectMessage update(i, tr->position_.getX(), tr->position_.getY(), 0, tr->rotation_);
+			UpdateGameObjectMessage update(i, tr->position_.getX(), tr->position_.getY(), 0, tr->rotation_,true);
 			net_server->broadcastMessage(&update);
 		}
 		for(int i = 0; i <  mngr_->getGroupEntities(ecs::_grp_Bullet).size(); i++){
 			Transform* tr = mngr_->getGroupEntities(ecs::_grp_Bullet)[i]->getComponent<Transform>(ecs::Transform);
-			UpdateGameObjectMessage update(i, tr->position_.getX(), tr->position_.getY(), 1, tr->rotation_);
+			UpdateGameObjectMessage update(i, tr->position_.getX(), tr->position_.getY(), 1, tr->rotation_, mngr_->getGroupEntities(ecs::_grp_Bullet)[i]->isActive());
 			net_server->broadcastMessage(&update);
 		}
 	}
