@@ -85,6 +85,7 @@ bool PiumPiumMasterClient::checkInput() {
 
 				ms.dirX = dir.getX();		ms.dirY = dir.getY();
 				ms.x = posPlayer.getX();	ms.y = posPlayer.getY();
+				ms.idPlayer = idClient_;
 
 				net_client->send(&ms);
 			}
@@ -139,7 +140,7 @@ void PiumPiumMasterClient::createPlayer(int x, int y){
 }
 void PiumPiumMasterClient::createBullet(int x, int y){
 	Vector2D pos = {x,y};
-	Entity* e = mngr_->addEntity<BulletPool>(pos, Vector2D(), 16, 16);
+	Entity* e = mngr_->addEntity<BulletPool>(pos, Vector2D(), 16, 16,0);
 	if (e != nullptr) {
 		e->setActive(true);
 		e->addToGroup(ecs::_grp_Bullet);
@@ -157,11 +158,13 @@ void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id, int type, b
 		}
 	}
 	else{
-		Entity* ent = mngr_->getGroupEntities(ecs::_grp_Bullet)[id];
-		Transform* tr = ent->getComponent<Transform>(ecs::Transform);
-		tr->position_ = {x, y};
-		tr->rotation_ = rot;
-		ent->setActive(active);
+		if(mngr_->getGroupEntities(ecs::_grp_Bullet).size() > id){
+			Entity* ent = mngr_->getGroupEntities(ecs::_grp_Bullet)[id];
+			Transform* tr = ent->getComponent<Transform>(ecs::Transform);
+			tr->position_ = {x, y};
+			tr->rotation_ = rot;
+			ent->setActive(active);
+		}
 	}	
 }
 void PiumPiumMasterClient::initPoolBullets(){

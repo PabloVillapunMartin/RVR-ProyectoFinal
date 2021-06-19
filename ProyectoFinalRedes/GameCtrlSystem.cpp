@@ -42,7 +42,7 @@ void GameCtrlSystem::recieve(const msg::Message& msg){
 		//Enviamos a los clientes la informacion necesaria
 		if(net_server){
 			UpdatePlayerStateMessage ms(gameState_->life[0], gameState_->points[0], gameState_->life[1], gameState_->points[1],
-			gameState_->life[3], gameState_->points[3], gameState_->life[4], gameState_->points[4]);
+			gameState_->life[2], gameState_->points[2], gameState_->life[3], gameState_->points[3]);
 			net_server->broadcastMessage(&ms);
 		} 
 		break;

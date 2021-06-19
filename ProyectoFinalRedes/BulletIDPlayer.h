@@ -6,7 +6,7 @@
 struct BulletIDPlayer : Component {
 
 	BulletIDPlayer() :
-		Component(ecs::GameState), //
+		Component(ecs::BulletIDPlayer), //
 		idPlayer()
 	{
 	}

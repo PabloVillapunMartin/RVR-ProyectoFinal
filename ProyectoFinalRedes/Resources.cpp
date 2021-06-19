@@ -11,13 +11,13 @@ vector<Resources::ImageInfo> Resources::images_ {
 //
 		{ PacManSprites, "resources/images/pacman_sprites.png" }, //
 		{ Bullet, "resources/images/bala.png" }, //
-		{ Player, "resources/images/player.png" } //
+		{ Player, "resources/images/player.png" }, //
+		{ DeathBackGround, "resources/images/FondoMuerte.png" } //
 };
 
 vector<Resources::TextMsgInfo> Resources::messages_ {
 //
-		{ PressEnterToStartANewGame, "Press ENTER to start a new game", { COLOR(0xaaffffff) }, ARIAL16 }, //
-		{ PressEnterToContinue, "Press ENTER to continue", { COLOR(0xaaffbbff) }, ARIAL24 }, //
+		{ WaitingForPlayers, "Waiting for players...", { COLOR(0xaaffbbff) }, ARIAL24 }, //
 		{ GameOver, "Game Over!", { COLOR(0xffffbbff) }, ARIAL24 } //
 };
 

@@ -10,6 +10,7 @@ class RenderSystem;
 class PlayerSystem;
 class GameCtrlSystem;
 class BulletSystem;
+class CollisionSystem;
 
 class PiumPiumMasterServer {
 

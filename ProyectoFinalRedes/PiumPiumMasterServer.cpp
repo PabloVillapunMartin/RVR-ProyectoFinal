@@ -15,6 +15,7 @@
 #include "GameState.h"
 #include "GameCtrlSystem.h"
 #include "BulletSystem.h"
+#include "CollisionSystem.h"
 
 using namespace std;
 
@@ -43,9 +44,9 @@ void PiumPiumMasterServer::initGame() {
 	playerSystem_=mngr_->addSystem<PlayerSystem>();
 	renderSystem_ = mngr_->addSystem<RenderSystem>();
 	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(net_server);
+	collisionSystem_ = mngr_->addSystem<CollisionSystem>();
 
 	// pacmanSystem_ = mngr_->addSystem<PacManSystem>();
-	// collisionSystem_ = mngr_->addSystem<CollisionSystem>();
 	// audioSystem = mngr_->addSystem<AudioSystem>();
 	// strawberrySystem = mngr_->addSystem<StrawberrySystem>();
 }
@@ -91,7 +92,7 @@ void PiumPiumMasterServer::start(char* ip, char* port) {
 		mngr_->refresh();
 
 		bulletSystem_->update();
-		// collisionSystem_->update();
+		collisionSystem_->update();
 
 		// this is needed for sending the messages!
 		net_server->proccessMessages();

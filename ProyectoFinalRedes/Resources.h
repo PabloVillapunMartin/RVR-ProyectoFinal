@@ -14,10 +14,10 @@ public:
 		PacManSprites,
 		Bullet,
 		Player,
+		DeathBackGround,
 
 		// text
-		PressEnterToStartANewGame,
-		PressEnterToContinue,
+		WaitingForPlayers,
 		GameOver,
 	};
 

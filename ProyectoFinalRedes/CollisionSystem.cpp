@@ -28,7 +28,7 @@ void CollisionSystem::update() {
 			//Comprobacion con las balas
 			for (int j = 0; j < mngr_->getGroupEntities(ecs::_grp_Bullet).size(); j++) {
 
-				Entity* bullet = mngr_->getGroupEntities(ecs::_grp_Bullet)[i];
+				Entity* bullet = mngr_->getGroupEntities(ecs::_grp_Bullet)[j];
 				Transform* etr = bullet->getComponent<Transform>(ecs::Transform);
 				BulletIDPlayer* idP = bullet->getComponent<BulletIDPlayer>(ecs::BulletIDPlayer);
 				if(bullet->isActive() && idP->idPlayer != i){
