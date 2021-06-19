@@ -1,9 +1,10 @@
 #include "CollisionSystem.h"
 
 #include "Collisions.h"
-//#include "GameState.h"
+#include "GameState.h"
 #include "Manager.h"
 #include "Transform.h"
+#include "BulletIDPlayer.h"
 
 
 CollisionSystem::CollisionSystem() :
@@ -12,40 +13,31 @@ CollisionSystem::CollisionSystem() :
 
 void CollisionSystem::update() {
 
-	//auto gameState = mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState);
-	//if ( gameState->state_ != GameState::RUNNING)
-	//	return;
+	auto gameState = mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState);
+	if ( gameState->state != GameState::inGame)
+		return;
 
-	//auto ptr = mngr_->getHandler(ecs::_hdlr_PacManEntity)->getComponent<Transform>(ecs::Transform);
+	// collision with food
+	for (int i = 0; i < mngr_->getGroupEntities(ecs::_grp_Player).size(); i++) {
 
-	//// collision with food
-	//for (auto &e : mngr_->getGroupEntities(ecs::_grp_Food)) {
-	//	auto etr = e->getComponent<Transform>(ecs::Transform);
-	//	if (Collisions::collides(ptr->position_, ptr->width_, ptr->height_,
-	//			etr->position_, etr->width_, etr->height_)) {
-	//			mngr_->send<msg::EatFruit>(e);
-	//	}
-	//}
+		Entity* player = mngr_->getGroupEntities(ecs::_grp_Player)[i];
+		if(player->isActive()){
 
-	//// collision with ghosts
-	//for (auto &e : mngr_->getGroupEntities(ecs::_grp_Ghost)) {
-	//	auto etr = e->getComponent<Transform>(ecs::Transform);
-	//	if (Collisions::collides(ptr->position_, ptr->width_, ptr->height_,
-	//			etr->position_, etr->width_, etr->height_)) {
-	//			if(!mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<Bonus>(ecs::Bonus)->active)
-	//				mngr_->send<msg::Message>(msg::_PACMANDEAD);
-	//			else //MUERE EL FANTASMA CON MENSAJE
-	//			break;
-	//	}
-	//}
+			Transform* ptr = player->getComponent<Transform>(ecs::Transform);
 
-	//// collision with strawberry
-	//Transform* tr = mngr_->getHandler(ecs::_hdlr_strawberry)->getComponent<Transform>(ecs::Transform);
-	//if (tr != nullptr) {
-	//	if (Collisions::collides(ptr->position_, ptr->width_, ptr->height_,
-	//		tr->position_, tr->width_, tr->height_)) {
-	//		mngr_->send<msg::Message>(msg::_EATSTRAWBERRY);
-	//	}
-	//}
+			//Comprobacion con las balas
+			for (int j = 0; j < mngr_->getGroupEntities(ecs::_grp_Bullet).size(); j++) {
 
+				Entity* bullet = mngr_->getGroupEntities(ecs::_grp_Bullet)[i];
+				Transform* etr = bullet->getComponent<Transform>(ecs::Transform);
+				BulletIDPlayer* idP = bullet->getComponent<BulletIDPlayer>(ecs::BulletIDPlayer);
+				if(bullet->isActive() && idP->idPlayer != i){
+					if (Collisions::collides(ptr->position_, ptr->width_, ptr->height_,
+							etr->position_, etr->width_, etr->height_)) {
+							mngr_->send<msg::BulletCollisionMessage>(j,i);
+					}
+				}
+			}
+		}
+	}
 }

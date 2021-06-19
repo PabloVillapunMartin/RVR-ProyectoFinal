@@ -60,7 +60,7 @@ void NetworkServer::proccessMessages(){
             }
             case MsgId::_SHOOT_CLIENT :{
                 ShootClientMessage* ms = static_cast<ShootClientMessage*>(msg);
-                SDLGame::instance()->getManager()->send<msg::ShootMessage>(ms->x, ms->y, ms->dirX, ms->dirY);
+                SDLGame::instance()->getManager()->send<msg::ShootMessage>(ms->x, ms->y, ms->dirX, ms->dirY, ms->idPlayer);
                 // ShootServerMessages nms(ms->x,ms->y);
 		        // broadcastMessage(&nms);
                 break;

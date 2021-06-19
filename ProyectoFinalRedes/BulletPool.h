@@ -6,7 +6,7 @@
 #include "Singleton.h"
 #include "Transform.h"
 #include "Manager.h"
-
+#include "BulletIDPlayer.h"
 
 class BulletPool : public Singleton<BulletPool> {
 	friend Singleton<BulletPool>;
@@ -23,7 +23,7 @@ public:
 		BulletPool::instance()->destroy_(p);
 	}
 
-	inline Entity* construct_(Vector2D pos, Vector2D vel, double w, double h) {
+	inline Entity* construct_(Vector2D pos, Vector2D vel, double w, double h, int idP) {
 		Entity* e = pool_.getObj();
 		if (e != nullptr) {
 			e->setActive(true);
@@ -32,6 +32,10 @@ public:
 			tr->position_.set(pos);
 			tr->width_ = w;
 			tr->height_ = h;
+
+			BulletIDPlayer* b = e->getComponent<BulletIDPlayer>(ecs::BulletIDPlayer);
+			b->idPlayer = idP;
+
 		}
 		return e;
 	}
@@ -49,6 +53,7 @@ private:
 		for (Entity* e : pool_.getPool()) {
 			e->addComponent<Transform>();
 			e->addComponent<ImageComponent>(SDLGame::instance()->getTextureMngr()->getTexture(Resources::Bullet));
+			e->addComponent<BulletIDPlayer>();
 		}
 	}
 

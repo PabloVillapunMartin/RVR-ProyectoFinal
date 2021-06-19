@@ -17,6 +17,7 @@ enum MsgId : msgType {
 	_UPDATE_GAMEOBJECT,
 	_SHOOT_CLIENT,
 	_SHOOT_SERVER,
+	_UPDATE_PLAYER_INFO,
 	//
 	_last_MsgId_
 };
@@ -146,7 +147,7 @@ public:
 //Mensaje de disparo, lo usa el cliente para indicarle al servidor la posicion en la que sea crea
 class ShootClientMessage : public NetworkMessage {
 public:
-	ShootClientMessage(int x_, int y_, float dirX_, float dirY_) : NetworkMessage(_SHOOT_CLIENT), x(x_), y(y_), dirX(dirX_), dirY(dirY_) {};
+	ShootClientMessage(int x_, int y_, float dirX_, float dirY_, int idP) : NetworkMessage(_SHOOT_CLIENT), x(x_), y(y_), idPlayer(idP), dirX(dirX_), dirY(dirY_) {};
 
 	ShootClientMessage() : NetworkMessage(_SHOOT_CLIENT) {};
 
@@ -156,7 +157,7 @@ public:
 
 	void to_bin() override;
 
-	int x, y;
+	int x, y, idPlayer;
 	float dirX, dirY;
 };
 //Mensaje de disparo, lo usa el servidor para decirle a los clientes que creen un go "bullet"
@@ -173,4 +174,24 @@ public:
 	void to_bin() override;
 
 	int x, y;
+};
+
+class UpdatePlayerStateMessage : public NetworkMessage{
+public:
+	UpdatePlayerStateMessage(int lives1_, int points1_, int lives2_, int points2_, int lives3_, int points3_, int lives4_, int points4_) : 
+	NetworkMessage(_UPDATE_PLAYER_INFO), lives1(lives1_), points1(points1_), lives2(lives2_), points2(points2_),
+	 lives3(lives3_), points3(points3_), lives4(lives4_), points4(points4_) {};
+
+	UpdatePlayerStateMessage() : NetworkMessage(_UPDATE_PLAYER_INFO) {};
+
+	~UpdatePlayerStateMessage(){}
+
+	int from_bin(char* data) override;
+
+	void to_bin() override;
+
+	int lives1, points1;
+	int lives2, points2;
+	int lives3, points3;
+	int lives4, points4;
 };

@@ -20,12 +20,14 @@ public:
 	void start(char* ip, char* port, char* playerName);
 	void stop();
 
-	inline void setID(int id){ idClient_ = id;}
+	
 	void createPlayer(int x, int y);
 	void createBullet(int x, int y);
 	void initPoolBullets();
 	void updateGO(int x, int y, float rot, int id, int type, bool active);
 
+	inline void setID(int id){ idClient_ = id;}
+	inline int getId(){ return idClient_;}
 private:
 	void initGame();
 	void closeGame();

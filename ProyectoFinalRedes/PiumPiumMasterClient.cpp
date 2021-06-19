@@ -39,7 +39,7 @@ void PiumPiumMasterClient::initGame() {
 	mngr_ = new Manager(game_);
 	game_->setManager(mngr_);
 	renderSystem_ = mngr_->addSystem<RenderSystem>();
-	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>();
+	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(nullptr, this);
 
 }
 

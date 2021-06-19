@@ -7,9 +7,9 @@
 
 
 //Crea una nueva bala dada la posicion y la velocidad a la que ha de ir
-void BulletSystem::shoot(Vector2D pos, Vector2D vel, double width, double height)
+void BulletSystem::shoot(Vector2D pos, Vector2D vel, double width, double height, int id)
 {
-	Entity* e = mngr_->addEntity<BulletPool>(pos, vel, width, height);
+	Entity* e = mngr_->addEntity<BulletPool>(pos, vel, width, height, id);
 	if (e != nullptr) {
 		e->setActive(true);
 		e->addToGroup(ecs::_grp_Bullet);
@@ -41,9 +41,14 @@ void BulletSystem::recieve(const msg::Message& msg){
 	{
 	case msg::_SHOOT_ :{
 		msg::ShootMessage info = static_cast<const msg::ShootMessage&>(msg);
-		shoot(Vector2D(info.x,info.y), Vector2D(info.dirX,info.dirY), 16, 16);
+		shoot(Vector2D(info.x,info.y), Vector2D(info.dirX,info.dirY), 16, 16, info.idPlayer);
 		ShootServerMessages ms(info.x,info.y);
 		net->broadcastMessage(&ms);
+		break;
+	}
+	case msg::_BULLET_COLLISION_ :{
+		msg::BulletCollisionMessage info = static_cast<const msg::BulletCollisionMessage&>(msg);
+		mngr_->getGroupEntities(ecs::_grp_Bullet)[info.id_bullet]->setActive(false);
 		break;
 	}
 	default:

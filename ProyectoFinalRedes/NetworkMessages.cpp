@@ -298,7 +298,7 @@ int UpdateGameObjectMessage::from_bin(char* obj){
 }
 //////////////////////SHOOT CLIENT/////////////////////////////
 void ShootClientMessage::to_bin(){
-	int32_t messageSize = sizeof(MsgId) + 2 * sizeof(int) + 2 * sizeof(float);
+	int32_t messageSize = sizeof(MsgId) + 3 * sizeof(int) + 2 * sizeof(float);
 
 	alloc_data(messageSize);
 
@@ -315,15 +315,18 @@ void ShootClientMessage::to_bin(){
 	memcpy(bufferPointer, &y, sizeof(int));
 	bufferPointer += sizeof(int);
 
-	memcpy(bufferPointer, &dirX, sizeof(float));
+	memcpy(bufferPointer, &idPlayer, sizeof(int));
 	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &dirX, sizeof(float));
+	bufferPointer += sizeof(float);
 
 	memcpy(bufferPointer, &dirY, sizeof(float));
 }
 
 int ShootClientMessage::from_bin(char* obj){
 
-	int32_t messageSize = sizeof(MsgId) + 2 * sizeof(int) + 2 * sizeof(float);
+	int32_t messageSize = sizeof(MsgId) + 3 * sizeof(int) + 2 * sizeof(float);
 	
 	alloc_data(messageSize);
 
@@ -340,8 +343,11 @@ int ShootClientMessage::from_bin(char* obj){
 	memcpy(&y, bufferPointer, sizeof(int));
 	bufferPointer += sizeof(int);
 
-	memcpy(&dirX, bufferPointer, sizeof(float));
+	memcpy(&idPlayer, bufferPointer, sizeof(int));
 	bufferPointer += sizeof(int);
+
+	memcpy(&dirX, bufferPointer, sizeof(float));
+	bufferPointer += sizeof(float);
 
 	memcpy(&dirY, bufferPointer, sizeof(float));
 
@@ -383,6 +389,82 @@ int ShootServerMessages::from_bin(char* obj){
 	bufferPointer += sizeof(int);
 
 	memcpy(&y, bufferPointer, sizeof(int));
+
+	return 0;
+}
+
+///////////////////////// UPDATE PLAYER STATE ///////////////////////////
+void UpdatePlayerStateMessage::to_bin(){
+	int32_t messageSize = sizeof(MsgId) + 8 * sizeof(int);
+
+	alloc_data(messageSize);
+
+	memset(_data, 0, messageSize);
+
+	char* bufferPointer = _data;
+
+	memcpy(bufferPointer, &id, sizeof(MsgId));
+	bufferPointer += sizeof(MsgId);
+
+	memcpy(bufferPointer, &lives1, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &points1, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &lives2, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &points2, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &lives3, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &points3, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &lives4, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &points4, sizeof(int));
+}
+
+int UpdatePlayerStateMessage::from_bin(char* obj){
+
+	int32_t messageSize = sizeof(MsgId) + 8 * sizeof(int);
+	
+	alloc_data(messageSize);
+
+	memcpy(static_cast<void *>(_data), obj, messageSize);
+
+	char* bufferPointer = _data;
+
+	memcpy(&id, bufferPointer, sizeof(MsgId));
+	bufferPointer += sizeof(MsgId);
+
+	memcpy(&lives1, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&points1, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&lives2, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&points2, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&lives3, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&points3, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&lives4, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&points4, bufferPointer, sizeof(int));
 
 	return 0;
 }
