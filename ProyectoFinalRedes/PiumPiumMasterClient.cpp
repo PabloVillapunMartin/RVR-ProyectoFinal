@@ -150,6 +150,20 @@ void PiumPiumMasterClient::createBullet(int x, int y){
 	}
 
 }
+
+void PiumPiumMasterClient::createWalls(){
+	Entity* ent = mngr_->addEntity();
+
+	Transform* tr = ent->addComponent<Transform>();
+	tr->position_ = {300, 220};
+	tr->height_ = 40;
+	tr->width_ = 40;
+	
+	ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Bullet));
+	ent->addToGroup(ecs::_grp_Walls);
+	ent->setVisible(true);
+}
+
 void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id, int type, bool active){
 	if(type == 0){
 		if(mngr_->getGroupEntities(ecs::_grp_Player).size() == 4){

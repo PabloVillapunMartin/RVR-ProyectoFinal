@@ -25,6 +25,7 @@ public:
 private:
 	void initGame(char* ip, char* port);
 	void closeGame();
+	void createWalls();
 
 	void clientGame();
 	void serverGame();

@@ -24,6 +24,7 @@ public:
 	void createPlayer(int x, int y);
 	void createBullet(int x, int y);
 	void initPoolBullets();
+	void createWalls();
 	void updateGO(int x, int y, float rot, int id, int type, bool active);
 
 	inline void setID(int id){ idClient_ = id;}

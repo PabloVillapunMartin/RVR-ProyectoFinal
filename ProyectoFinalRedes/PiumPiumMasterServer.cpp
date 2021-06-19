@@ -32,7 +32,6 @@ PiumPiumMasterServer::~PiumPiumMasterServer() {
 }
 
 
-
 void PiumPiumMasterServer::initGame(char* ip, char* port) {
 	game_ = SDLGame::init("PiumPiumMasterServer", _WINDOW_WIDTH_, _WINDOW_HEIGHT_);
 
@@ -49,10 +48,24 @@ void PiumPiumMasterServer::initGame(char* ip, char* port) {
 	BulletPool::init(40);
 	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(net_server);
 	bulletSystem_ = mngr_->addSystem<BulletSystem>(net_server);
+	createWalls();
 
 	// pacmanSystem_ = mngr_->addSystem<PacManSystem>();
 	// audioSystem = mngr_->addSystem<AudioSystem>();
 	// strawberrySystem = mngr_->addSystem<StrawberrySystem>();
+}
+
+void PiumPiumMasterServer::createWalls(){
+	Entity* ent = mngr_->addEntity();
+
+	Transform* tr = ent->addComponent<Transform>();
+	tr->position_ = {300, 220};
+	tr->height_ = 40;
+	tr->width_ = 40;
+	
+	ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Bullet));
+	ent->addToGroup(ecs::_grp_Walls);
+	ent->setVisible(true);
 }
 
 void PiumPiumMasterServer::closeGame() {
