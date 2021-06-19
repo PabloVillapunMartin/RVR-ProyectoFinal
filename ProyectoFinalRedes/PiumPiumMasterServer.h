@@ -15,15 +15,15 @@ class CollisionSystem;
 class PiumPiumMasterServer {
 
 public:
-	PiumPiumMasterServer();
+	PiumPiumMasterServer(char* ip, char* port);
 	virtual ~PiumPiumMasterServer();
 
 	// from SDLGame
-	void start(char* ip, char* port);
+	void start();
 	void stop();
 
 private:
-	void initGame();
+	void initGame(char* ip, char* port);
 	void closeGame();
 
 	void clientGame();

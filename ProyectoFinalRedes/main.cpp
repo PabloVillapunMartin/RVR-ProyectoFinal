@@ -13,8 +13,8 @@ void start(char* mode, char* ip, char* port) {
 	std::string mode_ = mode;
 
 	if(mode_ == "server"){
-		PiumPiumMasterServer g;
-		g.start(ip, port);
+		PiumPiumMasterServer g(ip,port);
+		g.start();
 	}
 	else{
 		PiumPiumMasterClient g;

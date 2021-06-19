@@ -32,7 +32,7 @@ public:
 	};
 
 	enum FontId : std::size_t {
-		ARIAL16, ARIAL24,
+		ARIAL16, ARIAL24,BEAR24,
 	};
 
 	struct FontInfo {

@@ -19,11 +19,11 @@
 
 using namespace std;
 
-PiumPiumMasterServer::PiumPiumMasterServer() :
+PiumPiumMasterServer::PiumPiumMasterServer(char* ip, char* port) :
 		game_(nullptr), //
 		mngr_(nullptr), //
 		exit_(false) {
-	initGame();
+	initGame(ip,port);
 }
 
 PiumPiumMasterServer::~PiumPiumMasterServer() {
@@ -33,18 +33,22 @@ PiumPiumMasterServer::~PiumPiumMasterServer() {
 
 
 
-void PiumPiumMasterServer::initGame() {
+void PiumPiumMasterServer::initGame(char* ip, char* port) {
 	game_ = SDLGame::init("PiumPiumMasterServer", _WINDOW_WIDTH_, _WINDOW_HEIGHT_);
 
 	// create the manager
 	mngr_ = new Manager(game_);
 	game_->setManager(mngr_);
 
+	net_server = new NetworkServer(ip, port);
+	net_server->start();
 	// // create the systems
 	playerSystem_=mngr_->addSystem<PlayerSystem>();
 	renderSystem_ = mngr_->addSystem<RenderSystem>();
-	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(net_server);
 	collisionSystem_ = mngr_->addSystem<CollisionSystem>();
+	BulletPool::init(40);
+	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(net_server);
+	bulletSystem_ = mngr_->addSystem<BulletSystem>(net_server);
 
 	// pacmanSystem_ = mngr_->addSystem<PacManSystem>();
 	// audioSystem = mngr_->addSystem<AudioSystem>();
@@ -68,14 +72,10 @@ void PiumPiumMasterServer::sendObjectPositions(){
 		}
 	}
 }
-void PiumPiumMasterServer::start(char* ip, char* port) {
+void PiumPiumMasterServer::start() {
 	exit_ = false;
 	auto ih = InputHandler::instance();
 	
-	net_server = new NetworkServer(ip, port);
-	net_server->start();
-	BulletPool::init(40);
-	bulletSystem_ = mngr_->addSystem<BulletSystem>(net_server);
 	while (!exit_) {
 		Uint32 startTime = game_->getTime();
 		SDL_RenderClear(game_->getRenderer());

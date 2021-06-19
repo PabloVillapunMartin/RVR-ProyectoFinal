@@ -4,7 +4,8 @@
 vector<Resources::FontInfo> Resources::fonts_ {
 //
 		{ ARIAL16, "resources/fonts/ARIAL.ttf", 16 }, //
-		{ ARIAL24, "resources/fonts/ARIAL.ttf", 24 } //
+		{ ARIAL24, "resources/fonts/ARIAL.ttf", 24 }, //
+		{ BEAR24, "resources/fonts/BearAndBunny.ttf", 24 } //
 };
 
 vector<Resources::ImageInfo> Resources::images_ {
@@ -17,8 +18,8 @@ vector<Resources::ImageInfo> Resources::images_ {
 
 vector<Resources::TextMsgInfo> Resources::messages_ {
 //
-		{ WaitingForPlayers, "Waiting for players...", { COLOR(0xaaffbbff) }, ARIAL24 }, //
-		{ GameOver, "Game Over!", { COLOR(0xffffbbff) }, ARIAL24 } //
+		{ WaitingForPlayers, "Waiting for players...", { COLOR(0xaaffbbff) }, BEAR24 }, //
+		{ GameOver, "Game Over!", { COLOR(0xffffffff) }, BEAR24 } //
 };
 
 vector<Resources::MusicInfo> Resources::musics_ {

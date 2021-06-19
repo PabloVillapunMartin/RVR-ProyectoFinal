@@ -42,7 +42,7 @@ void RenderSystem::update() {
 			rect.x = 0; rect.y = 0; rect.w = game_->getWindowWidth(); rect.h = game_->getWindowHeight();
 			texture->render(rect);
 
-			texture = game_->getTextureMngr()->getTexture(Resources::WaitingForPlayers);
+			texture = game_->getTextureMngr()->getTexture(Resources::GameOver);
 			rect;
 			rect.x = game_->getWindowWidth() / 2; rect.y = 20; rect.w = game_->getWindowWidth() / 3; rect.h = 50;
 			texture->render(rect);
