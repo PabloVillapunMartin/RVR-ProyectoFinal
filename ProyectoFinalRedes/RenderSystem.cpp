@@ -62,19 +62,32 @@ void RenderSystem::update() {
 		}
 		//Puntuaciones de los jugadores
 		for(int i = 0; i < 4; i++){
-			string player = "Player "+ (i + 1) ": " + gamestate->points[0];
+			string player = "Player " + std::to_string(i + 1) + ": " + std::to_string(gamestate->points[i]);
 
 			Texture name;
 			name.loadFromText(SDLGame::instance()->getRenderer(), player, SDLGame::instance()->getFontMngr()->getFont(Resources::BEAR24), SDL_Color({255, 255, 255, 255}));
 
 			SDL_Rect rect;
 			int offset = 10; 
-			rect.x = game_->getWindowWidth() - offset - 100; rect.y = 58 + offset + 20 * i(+1); rect.w = 100; rect.h = 20;
+			rect.x = game_->getWindowWidth() - offset - 100; rect.y = 58 + offset + 20 * (i+1); rect.w = 100; rect.h = 20;
 			name.render(rect);
 		}
 
 		//-------------------------------------------------- OnDeath -------------------------------------
 		if(mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::ondeath){
+			Texture* texture = game_->getTextureMngr()->getTexture(Resources::DeathBackGround);
+			SDL_Rect rect;
+			rect.x = 0; rect.y = 0; rect.w = game_->getWindowWidth(); rect.h = game_->getWindowHeight();
+			texture->render(rect);
+
+			texture = game_->getTextureMngr()->getTexture(Resources::GameOver);
+			rect;
+			rect.x = game_->getWindowWidth() / 2 - game_->getWindowWidth() / 4; rect.y = 0; rect.w = game_->getWindowWidth() / 2; rect.h = 50;
+
+			texture->render(rect);
+		}
+		//-------------------------------------------------- OnWin -----------------------------------------
+			if(mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::win){
 			Texture* texture = game_->getTextureMngr()->getTexture(Resources::DeathBackGround);
 			SDL_Rect rect;
 			rect.x = 0; rect.y = 0; rect.w = game_->getWindowWidth(); rect.h = game_->getWindowHeight();

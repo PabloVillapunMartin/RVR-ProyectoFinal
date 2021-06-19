@@ -16,8 +16,10 @@ public:
 
 private:
 	const int SHOOT_POINTS = 10;
+
 	GameState *gameState_;
 	NetworkServer* net_server;
 	PiumPiumMasterClient* client;
+
 };
 

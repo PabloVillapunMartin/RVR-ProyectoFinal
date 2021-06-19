@@ -5,7 +5,7 @@
 #include <vector>
 
 struct GameState : Component {
-	enum State : uint8_t { waiting, inGame , ondeath};
+	enum State : uint8_t { waiting, inGame , ondeath, win};
 
 	GameState() :
 		Component(ecs::GameState), //

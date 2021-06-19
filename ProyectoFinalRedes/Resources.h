@@ -21,6 +21,7 @@ public:
 
 		// text
 		GameOver,
+		Winner,
 	};
 
 	enum AudioId : std::size_t {

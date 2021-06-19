@@ -57,6 +57,7 @@ bool PiumPiumMasterClient::checkInput() {
 		//Si el jugador sale de la app
 		if (ih->isKeyDown(SDLK_ESCAPE)) {
 			exit_ = true;
+			
 			return false;
 		}
 		if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame &&

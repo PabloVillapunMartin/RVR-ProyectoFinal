@@ -21,7 +21,9 @@ vector<Resources::ImageInfo> Resources::images_ {
 
 vector<Resources::TextMsgInfo> Resources::messages_ {
 //
-		{ GameOver, "Game Over!", { COLOR(0xffffffff) }, BEAR24 } //
+		{ GameOver, "Game Over!", { COLOR(0xffffffff) }, BEAR24 }, //
+		{ Winner, "You Win!", { COLOR(0xffffffff) }, BEAR24 }
+
 };
 
 vector<Resources::MusicInfo> Resources::musics_ {

@@ -65,6 +65,14 @@ void GameCtrlSystem::recieve(const msg::Message& msg){
 
 		if(gameState_->life[client->getId()] <= 0)
 			gameState_->state = GameState::ondeath;
+		else {
+			int player = 0;
+			for(int i = 0; i< 4; i++){
+				if(gameState_->life[i] <= 0) player++;
+			}
+			if(player == 3) 
+				gameState_->state = GameState::win;
+		}
 		break;
 	}
 	default:
