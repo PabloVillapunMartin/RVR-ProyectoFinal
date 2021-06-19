@@ -38,7 +38,7 @@ void PiumPiumMasterClient::initGame() {
 	// create the manager
 	mngr_ = new Manager(game_);
 	game_->setManager(mngr_);
-	renderSystem_ = mngr_->addSystem<RenderSystem>();
+	renderSystem_ = mngr_->addSystem<RenderSystem>(this);
 	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(nullptr, this);
 
 }
@@ -159,7 +159,7 @@ void PiumPiumMasterClient::createWalls(){
 	tr->height_ = 40;
 	tr->width_ = 40;
 	
-	ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Bullet));
+	ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Muro));
 	ent->addToGroup(ecs::_grp_Walls);
 	ent->setVisible(true);
 }

@@ -10,15 +10,17 @@ vector<Resources::FontInfo> Resources::fonts_ {
 
 vector<Resources::ImageInfo> Resources::images_ {
 //
-		{ PacManSprites, "resources/images/pacman_sprites.png" }, //
 		{ Bullet, "resources/images/bala.png" }, //
 		{ Player, "resources/images/player.png" }, //
-		{ DeathBackGround, "resources/images/FondoMuerte.png" } //
+		{ DeathBackGround, "resources/images/FondoMuerte.png" }, //
+		{ Suelo, "resources/images/suelo.png" }, //
+		{ Vida, "resources/images/vida.png" }, //
+		{ Muro, "resources/images/muro.png" }, //
+		{ Waiting, "resources/images/waiting.png" } //
 };
 
 vector<Resources::TextMsgInfo> Resources::messages_ {
 //
-		{ WaitingForPlayers, "Waiting for players...", { COLOR(0xaaffbbff) }, BEAR24 }, //
 		{ GameOver, "Game Over!", { COLOR(0xffffffff) }, BEAR24 } //
 };
 

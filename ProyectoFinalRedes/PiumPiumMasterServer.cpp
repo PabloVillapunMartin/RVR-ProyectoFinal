@@ -63,7 +63,7 @@ void PiumPiumMasterServer::createWalls(){
 	tr->height_ = 40;
 	tr->width_ = 40;
 	
-	ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Bullet));
+	ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Muro));
 	ent->addToGroup(ecs::_grp_Walls);
 	ent->setVisible(true);
 }

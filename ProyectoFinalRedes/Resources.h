@@ -11,13 +11,15 @@ public:
 
 	enum TextureId : std::size_t {
 		// images
-		PacManSprites,
 		Bullet,
 		Player,
 		DeathBackGround,
+		Suelo,
+		Vida,
+		Muro,
+		Waiting,
 
 		// text
-		WaitingForPlayers,
 		GameOver,
 	};
 
