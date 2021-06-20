@@ -13,7 +13,6 @@ enum CmpId : CmpIdType {
 	ImageComponent,
 	AnimatedImageComponent,
 	GameState,
-	Bonus,
 	BulletIDPlayer,
 	//
 	// don't touch the rest of this enum, it is to identify the max

@@ -48,10 +48,6 @@ void PiumPiumMasterServer::initGame(char* ip, char* port) {
 	collisionSystem_ = mngr_->addSystem<CollisionSystem>(pool);
 	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(net_server, pool);
 	bulletSystem_ = mngr_->addSystem<BulletSystem>(net_server, pool);
-	
-	// pacmanSystem_ = mngr_->addSystem<PacManSystem>();
-	// audioSystem = mngr_->addSystem<AudioSystem>();
-	// strawberrySystem = mngr_->addSystem<StrawberrySystem>();
 }
 
 void PiumPiumMasterServer::createWalls(){
@@ -78,12 +74,14 @@ void PiumPiumMasterServer::closeGame() {
 }
 void PiumPiumMasterServer::sendObjectPositions(){
 	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame) {
+		//Actualizamos los jugadores
 		for(int i = 0; i <  mngr_->getGroupEntities(ecs::_grp_Player).size(); i++){
 			Entity* player = mngr_->getGroupEntities(ecs::_grp_Player)[i]; 
 			Transform* tr = player->getComponent<Transform>(ecs::Transform);
 			UpdateGameObjectMessage update(i, tr->position_.getX(), tr->position_.getY(), 0, tr->rotation_,player->isVisible());
 			net_server->broadcastMessage(&update);
 		}
+		//Actualizamos las balas
 		for(int i = 0; i < pool->getPool().size(); i++){
 			Transform* tr = pool->getPool()[i]->getComponent<Transform>(ecs::Transform);
 			UpdateGameObjectMessage update(i, tr->position_.getX(), tr->position_.getY(), 1, tr->rotation_, pool->getPool()[i]->isVisible());

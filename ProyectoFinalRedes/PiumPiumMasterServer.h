@@ -17,21 +17,46 @@ class Transform;
 class PiumPiumMasterServer {
 
 public:
+    /// <summary>
+	/// Constructora por defecto que crea el servidor
+	/// </summary>
 	PiumPiumMasterServer(char* ip, char* port);
+	/// <summary>
+	/// Destructora por defecto
+	/// </summary>
 	virtual ~PiumPiumMasterServer();
 
-	// from SDLGame
+	/// <summary>
+	/// Bucle ppal del juego
+	/// </summary>
 	void start();
+	/// <summary>
+	/// Para parar la la ejecución del bucle ppal
+	/// </summary>
 	void stop();
+	/// <summary>
+	/// Crea los muros del juego
+	/// </summary>
 	void createWalls();
 
 private:
+	/// <summary>
+	/// Inicializa los sistemas del juego y el servidor
+	/// </summary>
 	void initGame(char* ip, char* port);
+	/// <summary>
+	/// Libera los recursos y memoria utilizados
+	/// </summary>
 	void closeGame();
 
-	void clientGame();
-	void serverGame();
+    /// <summary>
+	/// Envía a los jugadores las posiciones actualizadas de todos los gameObjects
+	/// </summary>
 	void sendObjectPositions();
+
+	/// <summary>
+	/// Crea un muro dada una posicion y tamaño
+	/// </summary>
 	void createSingleWall(int x, int y, int width, int height);
 
 	SDLGame *game_;

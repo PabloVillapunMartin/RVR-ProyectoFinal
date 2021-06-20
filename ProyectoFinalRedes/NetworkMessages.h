@@ -161,7 +161,7 @@ public:
 	int x, y, idPlayer;
 	float dirX, dirY;
 };
-
+//Mensaje de servidor a cliente para actualiar los parámetros del estado del juego
 class UpdatePlayerStateMessage : public NetworkMessage{
 public:
 	UpdatePlayerStateMessage(int lives1_, int points1_, int lives2_, int points2_, int lives3_, int points3_, int lives4_, int points4_) : 
@@ -182,7 +182,7 @@ public:
 	int lives4, points4;
 
 };
-
+//Mensaje de servidor a cliente para la creación de muros
 class WallInfo : public NetworkMessage{
 public:
 	WallInfo(int x_, int y_, int height_, int weight_) : NetworkMessage(_WALL_INFO), x(x_), y(y_), height(height_), width(weight_) {};
@@ -198,7 +198,7 @@ public:
 	int x, y;
 	int height, width;
 };
-
+//Mensaje de servidor a cliente para cuando el servidor se ha cerrado
 class ServerClosedMessage : public NetworkMessage{
 public:
 	ServerClosedMessage() : NetworkMessage(_SERVER_CLOSED) {};

@@ -57,66 +57,65 @@ bool PiumPiumMasterClient::checkInput() {
     auto ih = InputHandler::instance();
     ih->update();
 	
-	//Si hay algún evento de teclado o mouse
-	//if (ih->keyDownEvent() || ih->mouseMotionEvent() || ih->mouseButtonEvent()) {
-		//Si el jugador sale de la app
-		if (ih->isKeyDown(SDLK_ESCAPE)) {
-			exit_ = true;
-			
-			return false;
-		}
-		if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame &&
-			mngr_->getGroupEntities(ecs::_grp_Player).size() == 4) {
+	//Si el jugador sale de la app
+	if (ih->isKeyDown(SDLK_ESCAPE)) {
+		exit_ = true;
+		
+		return false;
+	}
+	//Si la partida ha iniciado y los jugadores han sido instanciados
+	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame &&
+		mngr_->getGroupEntities(ecs::_grp_Player).size() == 4) {
 
-			Vector2D posMouse = ih->getMousePos();
-			Vector2D posPlayer = mngr_->getGroupEntities(ecs::_grp_Player)[idClient_]->getComponent<Transform>(ecs::Transform)->position_;
-			//Calculamos la direccion a la que mira el player
-			Vector2D dir = (posMouse - posPlayer).normalize();
+		Vector2D posMouse = ih->getMousePos();
+		Vector2D posPlayer = mngr_->getGroupEntities(ecs::_grp_Player)[idClient_]->getComponent<Transform>(ecs::Transform)->position_;
+		//Calculamos la direccion a la que mira el player
+		Vector2D dir = (posMouse - posPlayer).normalize();
 
-			float rot = atan(dir.getY() / dir.getX()) * 180 / PI;
-			
-			//Check de movimiento arriba y abajo
+		float rot = atan(dir.getY() / dir.getX()) * 180 / PI;
+		
+		//Check de movimiento arriba y abajo
 
-			if (ih->isKeyDown(SDLK_w))  	up = true;
-			else if(ih->isKeyUp(SDLK_w))	up = false;
+		if (ih->isKeyDown(SDLK_w))  	up = true;
+		else if(ih->isKeyUp(SDLK_w))	up = false;
 
-			if (ih->isKeyDown(SDLK_s)) 		down = true;
-			else if(ih->isKeyUp(SDLK_s))	down = false;
+		if (ih->isKeyDown(SDLK_s)) 		down = true;
+		else if(ih->isKeyUp(SDLK_s))	down = false;
 
-			if (ih->isKeyDown(SDLK_a)) 		left = true;
-			else if(ih->isKeyUp(SDLK_a))	left = false;
-			
-			if (ih->isKeyDown(SDLK_d))		right = true;
-			else if(ih->isKeyUp(SDLK_d))	right = false;
+		if (ih->isKeyDown(SDLK_a)) 		left = true;
+		else if(ih->isKeyUp(SDLK_a))	left = false;
+		
+		if (ih->isKeyDown(SDLK_d))		right = true;
+		else if(ih->isKeyUp(SDLK_d))	right = false;
 
-			//Check de disparo de bala
-			if(ih->getMouseButtonState(InputHandler::MOUSEBUTTON::LEFT)){
-				ShootClientMessage ms;
+		//Check de disparo de bala
+		if(ih->getMouseButtonState(InputHandler::MOUSEBUTTON::LEFT)){
+			ShootClientMessage ms;
 
-				ms.dirX = dir.getX();		ms.dirY = dir.getY();
-				ms.x = posPlayer.getX();	ms.y = posPlayer.getY();
-				ms.idPlayer = idClient_;
-
-				net_client->send(&ms);
-			}
-
-			int x = 0;
-			int y = 0;
-
-			if(up) y -= 1;
-			if(down) y += 1;
-			if(left) x -= 1;
-			if(right) x += 1;
-
-			//Mensaje update de input
-			int speed = 2;
-			UpdateClientPlayerMessage ms;
-			ms.go_id = idClient_;	ms.x = x; 	ms.y = y;	ms.rotation = rot - 180.0f;
-			if ( posMouse.getX() > posPlayer.getX() ) ms.rotation += 180.0f;
+			ms.dirX = dir.getX();		ms.dirY = dir.getY();
+			ms.x = posPlayer.getX();	ms.y = posPlayer.getY();
+			ms.idPlayer = idClient_;
 
 			net_client->send(&ms);
-		}	
-	//}
+		}
+
+		int x = 0;
+		int y = 0;
+
+		if(up) y -= 1;
+		if(down) y += 1;
+		if(left) x -= 1;
+		if(right) x += 1;
+
+		//Mensaje update de input
+		int speed = 2;
+		UpdateClientPlayerMessage ms;
+		ms.go_id = idClient_;	ms.x = x; 	ms.y = y;	ms.rotation = rot - 180.0f;
+		if ( posMouse.getX() > posPlayer.getX() ) ms.rotation += 180.0f;
+
+		net_client->send(&ms);
+	}	
+
     return true;
 }
 void PiumPiumMasterClient::start(char* ip, char* port, char* playerName) {
@@ -124,18 +123,21 @@ void PiumPiumMasterClient::start(char* ip, char* port, char* playerName) {
 	
 	net_client = new NetworkClient(ip, port, playerName, this);
 	net_client->start();
-
+	//bucle principal del juego
 	while (!exit_) {
 		Uint32 startTime = game_->getTime();
 		SDL_RenderClear(game_->getRenderer());
 		SDL_SetRenderDrawColor(game_->getRenderer(), COLOR(0x003B00FF));
 
-        if(!checkInput()) break;
+		//miramos el input del usuario
+        if(!checkInput()) break;	
 
 		mngr_->refresh();
 
+		//pintamos los objetos
 		renderSystem_->update();
 
+		//procesamos mensajes locales y de red
 		net_client->proccessMessages();
 		mngr_->flushMessages();
 

@@ -14,11 +14,11 @@ bool running;
 
 NetworkClient::~NetworkClient(){
     mut.lock();
-    running = false;
+    running = false;    //para parar el bucle del hilo
     mut.unlock();
-    incomingMessagesThread_.join();
+    incomingMessagesThread_.join(); //esperamos a que se cierre el hilo
 
-    while(!messages_.empty()){
+    while(!messages_.empty()){  //eliminamos todos los mensajes que quedaran por procesar
         delete messages_.front();
         messages_.pop();
     }
@@ -96,6 +96,8 @@ void NetworkClient::proccessMessages(){
 void NetworkClient::login(){
     LoginClientMessage* loginMessage = new LoginClientMessage(playerName);
     std::cout << "[Client] Sending login message of type " << (size_t)loginMessage->id << '\n';
+
+    //Le enviamos al servidor una pedición de log
     socket_.send(*loginMessage, socket_);
     delete loginMessage;
 }

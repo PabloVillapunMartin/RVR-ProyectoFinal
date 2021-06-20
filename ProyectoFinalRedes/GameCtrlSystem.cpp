@@ -50,7 +50,7 @@ void GameCtrlSystem::recieve(const msg::Message& msg){
 		} 
 		break;
 	} 	
-	//Se rcibe de forma local en los clientes
+	//Se recibe de forma local en los clientes
 	case msg::_UPDATE_PLAYER_INFO:{
 		msg::UpdatePlayerState info = static_cast<const msg::UpdatePlayerState&>(msg);
 		//Actualizacion de vidas y puntos
@@ -64,9 +64,9 @@ void GameCtrlSystem::recieve(const msg::Message& msg){
 		gameState_->points[2] = info.points3;
 		gameState_->points[3] = info.points4;
 
-		if(gameState_->life[client->getId()] <= 0)
+		if(gameState_->life[client->getId()] <= 0)	//Si la vida propia es menor que 0
 			gameState_->state = GameState::ondeath;
-		else {
+		else {										//Sino miramos si el resto ha muerto
 			int player = 0;
 			for(int i = 0; i< 4; i++){
 				if(gameState_->life[i] <= 0) player++;

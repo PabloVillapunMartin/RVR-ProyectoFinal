@@ -13,13 +13,15 @@ bool runningServer;
 
 NetworkServer::~NetworkServer(){
     mutServer.lock();
-    runningServer = false;
+    runningServer = false;  //para parar el bucle del hilo
     mutServer.unlock();
 
+    //Enviamos un mensaje a todos los clientes de que el servidor se ha cerrado
     ServerClosedMessage sc;
     socket.send(sc, socket);
     incomingMessagesThread_.join();
 
+    //Limpiamos la cola de mensajes en caso de haber alguno no procesado
     while(!messagesServer_.empty()){
         delete messagesServer_.front();
         messagesServer_.pop();
@@ -46,7 +48,8 @@ void NetworkServer::proccessMessages(){
                 if(playersReady < 4) playersReady ++;
                 std::cout << "[Server] Players ready to play: "<< playersReady << "\n";
 
-                if(playersReady == 4){
+                //Si ya están los cuatro jugadores preparados iniciamos la partida
+                if(playersReady == 4){  
                     gameServer->createWalls();
                     StartGameMessage startGame(40, 40, 600, 40, 40, 440, 600, 440);
                     broadcastMessage(&startGame);
@@ -62,14 +65,11 @@ void NetworkServer::proccessMessages(){
             case MsgId::_UPDATE_CLIENT_PLAYER :{
                 UpdateClientPlayerMessage* ms = static_cast<UpdateClientPlayerMessage*>(msg);
                 SDLGame::instance()->getManager()->send<msg::MoveMessage>(ms->x, ms->y, ms->go_id, ms->rotation);
-                //std::cout << "UpdateClient info: " << ms->go_id << " | " << ms->x << ", " << ms->y << " | " << ms->rotation << '\n';
                 break;
             }
             case MsgId::_SHOOT_CLIENT :{
                 ShootClientMessage* ms = static_cast<ShootClientMessage*>(msg);
                 SDLGame::instance()->getManager()->send<msg::ShootMessage>(ms->x, ms->y, ms->dirX, ms->dirY, ms->idPlayer);
-                // ShootServerMessages nms(ms->x,ms->y);
-		        // broadcastMessage(&nms);
                 break;
             }
             default:
@@ -89,7 +89,6 @@ void NetworkServer::addClient(Socket* clientSocket, LoginClientMessage* msg){
     
     ConfirmationLoginMessage confirmationMessage(clients.size() - 1);
     socket.send(confirmationMessage, *clients[clients.size()-1].get());
-    //piumpium->addClient(); ->se añade el go de un cliente(con sus componentes)
 }
 
 void NetworkServer::removeClient(Socket* clientSocket){
@@ -123,7 +122,6 @@ void NetworkServer::recieve_thread(){
         Socket* clientSock = nullptr;
     
         socket.recv(nm, clientSock, msData);
-        //std::cout << "Mensaje recibido de tipo " << (size_t)nm.id << "\n"; 
 
         mutServer.lock();
         switch ((size_t)nm.id)

@@ -14,7 +14,7 @@ struct GameState : Component {
 	}
 
 	State state;
-	std::vector<int> life;
-	std::vector<int> points;
+	std::vector<int> life;		//array de vidas donde en cada posicion se encuentra la vida de un jugador
+	std::vector<int> points;	//array de puntos donde en cada posicion se encuentra los puntos de un jugador
 };
 

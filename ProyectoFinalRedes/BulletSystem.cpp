@@ -8,8 +8,9 @@
 //Crea una nueva bala dada la posicion y la velocidad a la que ha de ir
 void BulletSystem::shoot(Vector2D pos, Vector2D vel, double width, double height, int id)
 {
-	Entity* e = pool->getBullet();
+	Entity* e = pool->getBullet();	//pide una bala
 	if (e != nullptr) {
+		//Actualiza sus parámetros con la información dada
 		e->setVisible(true);
 		Transform* t = e->getComponent<Transform>(ecs::Transform);
 		t->position_ = pos; 	t->velocity_ = vel;
@@ -22,9 +23,10 @@ void BulletSystem::shoot(Vector2D pos, Vector2D vel, double width, double height
 
 void BulletSystem::update()
 {
+	//Si el estado es ingame
 	if (mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state == GameState::inGame) {
 		for (auto& o : pool->getPool()) {
-			if (o->isVisible()) {
+			if (o->isVisible()) {	//si la bala esta activa
 				Transform* t = o->getComponent<Transform>(ecs::Transform);
 				t->position_.set(Vector2D(t->position_.getX() + t->velocity_.getX(), t->position_.getY() + t->velocity_.getY())); //suma la velocidad a la bala
 
@@ -41,14 +43,14 @@ void BulletSystem::update()
 void BulletSystem::recieve(const msg::Message& msg){
 	switch (msg.id)
 	{
-	case msg::_SHOOT_ :{
+	case msg::_SHOOT_ :{	//Mensaje de disparo
 		msg::ShootMessage info = static_cast<const msg::ShootMessage&>(msg);
 		shoot(Vector2D(info.x,info.y), Vector2D(info.dirX,info.dirY), 8, 8, info.idPlayer);
 		break;
 	}
-	case msg::_BULLET_COLLISION_ :{
+	case msg::_BULLET_COLLISION_ :{		//Si la bala ha colisionado
 		msg::BulletCollisionMessage info = static_cast<const msg::BulletCollisionMessage&>(msg);
-		pool->deleteBullet(pool->getPool()[info.id_bullet]);
+		pool->deleteBullet(pool->getPool()[info.id_bullet]);	//desactivamos la bala
 		break;
 	}
 	default:

@@ -26,13 +26,6 @@ public:
 	};
 
 	enum AudioId : std::size_t {
-		// music
-		PacMan_Intro,
-
-		// sound effects
-		PacMan_Eat,
-		PacMan_Death,
-		PacMan_Won
 	};
 
 	enum FontId : std::size_t {

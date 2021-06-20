@@ -18,7 +18,7 @@ void CollisionSystem::update() {
 	auto gameState = mngr_->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState);
 	if ( gameState->state != GameState::inGame)
 		return;
-
+	//Miramos la colisión del player con cada una de las entidades del juego
 	for (int i = 0; i < mngr_->getGroupEntities(ecs::_grp_Player).size(); i++) {
 
 		Entity* player = mngr_->getGroupEntities(ecs::_grp_Player)[i];
@@ -51,7 +51,7 @@ void CollisionSystem::update() {
 			}
 		}
 	}
-	//Comprobacion con las balas
+	//Comprobamos las balas con cada una de las paredes
 	for (int i = 0; i < pool->getPool().size(); i++) {
 
 		Entity* bullet = pool->getPool()[i];
