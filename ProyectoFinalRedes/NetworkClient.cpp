@@ -82,7 +82,7 @@ void NetworkClient::proccessMessages(){
         }
         case MsgId::_WALL_INFO: {
             WallInfo* ms = static_cast<WallInfo*>(msg);
-            gameClient->createWall(*ms);
+            gameClient->createWall(ms);
             break;
         }
         default:

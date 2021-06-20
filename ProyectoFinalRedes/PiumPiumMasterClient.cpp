@@ -160,15 +160,15 @@ void PiumPiumMasterClient::createPlayer(int x, int y){
 
 }
 
-void PiumPiumMasterClient::createWall(WallInfo ms){
+void PiumPiumMasterClient::createWall(WallInfo* ms){
 	Entity* ent = mngr_->addEntity();
 
 	Transform* tr = ent->addComponent<Transform>();
-	tr->position_ = {ms.x, ms.y};
-	tr->height_ = ms.height;
-	tr->width_ = ms.width;
+	tr->position_ = {ms->x, ms->y};
+	tr->height_ = ms->height;
+	tr->width_ = ms->width;
 	
-	if(ms.width > ms.height)
+	if(ms->width > ms->height)
 		ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Muro2));
 	else ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Muro));
 	

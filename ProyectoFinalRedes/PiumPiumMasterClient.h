@@ -24,7 +24,7 @@ public:
 
 	
 	void createPlayer(int x, int y);
-	void createWall(WallInfo ms);
+	void createWall(WallInfo* ms);
 	void updateGO(int x, int y, float rot, int id, int type, bool active);
 
 	inline void setID(int id){ idClient_ = id;}

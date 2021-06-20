@@ -458,7 +458,7 @@ void WallInfo::to_bin(){
 
 int WallInfo::from_bin(char* obj){
 	int32_t messageSize = sizeof(MsgId) + 4 * sizeof(int);
-
+	
 	alloc_data(messageSize);
 
 	memcpy(static_cast<void *>(_data), obj, messageSize);
@@ -478,4 +478,6 @@ int WallInfo::from_bin(char* obj){
 	bufferPointer += sizeof(int);
 
 	memcpy(&height, bufferPointer, sizeof(int));
+	
+	return 0;
 }
