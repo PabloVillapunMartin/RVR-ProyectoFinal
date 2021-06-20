@@ -56,109 +56,21 @@ void PiumPiumMasterServer::initGame(char* ip, char* port) {
 
 void PiumPiumMasterServer::createWalls(){
 	//---------------Pared arriba-----------------------
-	Entity* ent = mngr_->addEntity();
-
-	Transform* tr = ent->addComponent<Transform>();
-	tr->position_ = {0, -10};
-	tr->height_ = 10;
-	tr->width_ = _WINDOW_WIDTH_;
-	
-	ent->addToGroup(ecs::_grp_Walls);
-	ent->setVisible(true);
-
-	WallInfo ms(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
-	net_server->broadcastMessage(&ms);
+	createSingleWall(0, -10, _WINDOW_WIDTH_, 10);
 	//---------------Pared abajo-------------------------
-	ent = mngr_->addEntity();
-
-	tr = ent->addComponent<Transform>();
-	tr->position_ = {0, _WINDOW_HEIGHT_};
-	tr->height_ = 10;
-	tr->width_ = _WINDOW_WIDTH_;
-	
-	ent->addToGroup(ecs::_grp_Walls);
-	ent->setVisible(true);
-
-	WallInfo ms1(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
-	net_server->broadcastMessage(&ms1);
+	createSingleWall(0, _WINDOW_HEIGHT_, _WINDOW_WIDTH_, 10);
 	//---------------Pared derecha-----------------------
-	ent = mngr_->addEntity();
-
-	tr = ent->addComponent<Transform>();
-	tr->position_ = {-10, 0};
-	tr->height_ = _WINDOW_HEIGHT_;
-	tr->width_ = 10;
-	
-	ent->addToGroup(ecs::_grp_Walls);
-	ent->setVisible(true);
-
-	WallInfo ms2(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
-	net_server->broadcastMessage(&ms2);
+	createSingleWall(-10, 0, 10, _WINDOW_HEIGHT_);
 	//---------------Pared izquierda---------------------
-	ent = mngr_->addEntity();
-
-	tr = ent->addComponent<Transform>();
-	tr->position_ = {_WINDOW_WIDTH_, 0};
-	tr->height_ = _WINDOW_HEIGHT_;
-	tr->width_ = 10;
-	
-	ent->addToGroup(ecs::_grp_Walls);
-	ent->setVisible(true);
-
-	WallInfo ms3(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
-	net_server->broadcastMessage(&ms3);
+	createSingleWall(_WINDOW_WIDTH_, 0, 10, _WINDOW_HEIGHT_);
 	//----------------Muro interior derecha---------------------
-	ent = mngr_->addEntity();
-
-	tr = ent->addComponent<Transform>();
-	tr->position_ = {425, 200};
-	tr->height_ = 30;
-	tr->width_ = 140;
-	
-	ent->addToGroup(ecs::_grp_Walls);
-	ent->setVisible(true);
-
-	WallInfo ms4(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
-	net_server->broadcastMessage(&ms4);
+	createSingleWall(425, 200, 140, 30);
 	//----------------Muro interior izquierda-------------------
-	ent = mngr_->addEntity();
-
-	tr = ent->addComponent<Transform>();
-	tr->position_ = {105, 200};
-	tr->height_ = 30;
-	tr->width_ = 140;
-	
-	ent->addToGroup(ecs::_grp_Walls);
-	ent->setVisible(true);
-
-	WallInfo ms5(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
-	net_server->broadcastMessage(&ms5);
+	createSingleWall(105, 200, 140, 30);
 	//----------------Muro interior abajo-----------------------
-	ent = mngr_->addEntity();
-
-	tr = ent->addComponent<Transform>();
-	tr->position_ = {310, 70};
-	tr->height_ = 140;
-	tr->width_ = 20;
-	
-	ent->addToGroup(ecs::_grp_Walls);
-	ent->setVisible(true);
-
-	WallInfo ms6(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
-	net_server->broadcastMessage(&ms6);
+	createSingleWall(310, 70, 20, 140);
 	//----------------Muro interior arriba----------------------
-	ent = mngr_->addEntity();
-
-	tr = ent->addComponent<Transform>();
-	tr->position_ = {310, 350};
-	tr->height_ = 140;
-	tr->width_ = 20;
-	
-	ent->addToGroup(ecs::_grp_Walls);
-	ent->setVisible(true);
-
-	WallInfo ms7(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
-	net_server->broadcastMessage(&ms7);
+	createSingleWall(310, 350, 20, 140);
 }
 
 void PiumPiumMasterServer::closeGame() {
@@ -179,6 +91,22 @@ void PiumPiumMasterServer::sendObjectPositions(){
 		}
 	}
 }
+
+void PiumPiumMasterServer::createSingleWall(int x, int y, int width, int height){
+	Entity* ent = mngr_->addEntity();
+
+	Transform* tr = ent->addComponent<Transform>();
+	tr->position_ = {x, y};
+	tr->height_ = height;
+	tr->width_ = width;
+	
+	ent->addToGroup(ecs::_grp_Walls);
+	ent->setVisible(true);
+
+	WallInfo ms(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
+	net_server->broadcastMessage(&ms);
+}
+
 void PiumPiumMasterServer::start() {
 	exit_ = false;
 	auto ih = InputHandler::instance();

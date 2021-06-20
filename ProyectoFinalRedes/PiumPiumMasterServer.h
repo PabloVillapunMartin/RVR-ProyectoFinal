@@ -12,6 +12,7 @@ class GameCtrlSystem;
 class BulletSystem;
 class CollisionSystem;
 class BulletPool;
+class Transform;
 
 class PiumPiumMasterServer {
 
@@ -31,6 +32,7 @@ private:
 	void clientGame();
 	void serverGame();
 	void sendObjectPositions();
+	void createSingleWall(int x, int y, int width, int height);
 
 	SDLGame *game_;
 	Manager *mngr_;
