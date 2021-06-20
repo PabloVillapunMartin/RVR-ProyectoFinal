@@ -15,12 +15,17 @@ NetworkServer::~NetworkServer(){
     mutServer.lock();
     runningServer = false;
     mutServer.unlock();
+
+    ServerClosedMessage sc;
+    socket.send(sc, socket);
     incomingMessagesThread_.join();
 
     while(!messagesServer_.empty()){
         delete messagesServer_.front();
         messagesServer_.pop();
     }
+
+    broadcastMessage(&sc);
 }
 
 void NetworkServer::start(){

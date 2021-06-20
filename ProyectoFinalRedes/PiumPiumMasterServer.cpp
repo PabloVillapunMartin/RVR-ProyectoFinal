@@ -33,7 +33,7 @@ PiumPiumMasterServer::~PiumPiumMasterServer() {
 
 
 void PiumPiumMasterServer::initGame(char* ip, char* port) {
-	game_ = SDLGame::init("PiumPiumMasterServer", _WINDOW_WIDTH_, _WINDOW_HEIGHT_, false);
+	game_ = SDLGame::init("PiumPiumMasterServer", _WINDOW_WIDTH_, _WINDOW_HEIGHT_, true);
 
 	// create the manager
 	mngr_ = new Manager(game_);
@@ -120,6 +120,7 @@ void PiumPiumMasterServer::start() {
 		if (ih->keyDownEvent()) {
 			if (ih->isKeyDown(SDLK_ESCAPE)) {
 				exit_ = true;
+				std::cout << "[Server] Closing server\n";
 				break;
 			}
 		}

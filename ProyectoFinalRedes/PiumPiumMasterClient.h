@@ -20,7 +20,7 @@ public:
 
 	// from SDLGame
 	void start(char* ip, char* port, char* playerName);
-	void stop();
+	void stop() { exit_ = true; };
 
 	
 	void createPlayer(int x, int y);

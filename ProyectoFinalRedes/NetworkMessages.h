@@ -18,6 +18,7 @@ enum MsgId : msgType {
 	_SHOOT_CLIENT,
 	_UPDATE_PLAYER_INFO,
 	_WALL_INFO,
+	_SERVER_CLOSED,
 	//
 	_last_MsgId_
 };
@@ -196,4 +197,15 @@ public:
 
 	int x, y;
 	int height, width;
+};
+
+class ServerClosedMessage : public NetworkMessage{
+public:
+	ServerClosedMessage() : NetworkMessage(_SERVER_CLOSED) {};
+
+	~ServerClosedMessage(){}
+
+	int from_bin(char* data) override;
+
+	void to_bin() override;
 };

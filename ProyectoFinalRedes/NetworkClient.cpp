@@ -140,6 +140,12 @@ void NetworkClient::recieve_thread(){
             messages_.push(ms);
             break;
         }
+        case MsgId::_SERVER_CLOSED: {
+            std::cout << "[Client] Server has been closed\n";
+            gameClient->stop();
+            running = false;
+            break;
+        }
         default:
             std::cout << "[Client] Unknown message received of type " << (size_t)nm.id << "\n";
             break;
