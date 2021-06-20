@@ -353,45 +353,7 @@ int ShootClientMessage::from_bin(char* obj){
 
 	return 0;
 }
-//////////////////////SHOOT SERVER/////////////////////////////
-void ShootServerMessages::to_bin(){
-	int32_t messageSize = sizeof(MsgId) + 2 * sizeof(int);
 
-	alloc_data(messageSize);
-
-	memset(_data, 0, messageSize);
-
-	char* bufferPointer = _data;
-
-	memcpy(bufferPointer, &id, sizeof(MsgId));
-	bufferPointer += sizeof(MsgId);
-
-	memcpy(bufferPointer, &x, sizeof(int));
-	bufferPointer += sizeof(int);
-
-	memcpy(bufferPointer, &y, sizeof(int));
-}
-
-int ShootServerMessages::from_bin(char* obj){
-
-	int32_t messageSize = sizeof(MsgId) + 2 * sizeof(int);
-	
-	alloc_data(messageSize);
-
-	memcpy(static_cast<void *>(_data), obj, messageSize);
-
-	char* bufferPointer = _data;
-
-	memcpy(&id, bufferPointer, sizeof(MsgId));
-	bufferPointer += sizeof(MsgId);
-
-	memcpy(&x, bufferPointer, sizeof(int));
-	bufferPointer += sizeof(int);
-
-	memcpy(&y, bufferPointer, sizeof(int));
-
-	return 0;
-}
 
 ///////////////////////// UPDATE PLAYER STATE ///////////////////////////
 void UpdatePlayerStateMessage::to_bin(){
@@ -467,4 +429,53 @@ int UpdatePlayerStateMessage::from_bin(char* obj){
 	memcpy(&points4, bufferPointer, sizeof(int));
 
 	return 0;
+}
+
+////////////////////////////////////////////////// WallInfo ///////////////////////////////////////////////////////
+void WallInfo::to_bin(){
+	int32_t messageSize = sizeof(MsgId) + 4 * sizeof(int);
+
+	alloc_data(messageSize);
+
+	memset(_data, 0, messageSize);
+
+	char* bufferPointer = _data;
+
+	memcpy(bufferPointer, &id, sizeof(MsgId));
+	bufferPointer += sizeof(MsgId);
+
+	memcpy(bufferPointer, &x, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &y, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &width, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(bufferPointer, &height, sizeof(int));
+}
+
+int WallInfo::from_bin(char* obj){
+	int32_t messageSize = sizeof(MsgId) + 4 * sizeof(int);
+
+	alloc_data(messageSize);
+
+	memcpy(static_cast<void *>(_data), obj, messageSize);
+
+	char* bufferPointer = _data;
+
+	memcpy(&id, bufferPointer, sizeof(MsgId));
+	bufferPointer += sizeof(MsgId);
+
+	memcpy(&x, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&y, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&width, bufferPointer, sizeof(int));
+	bufferPointer += sizeof(int);
+
+	memcpy(&height, bufferPointer, sizeof(int));
 }

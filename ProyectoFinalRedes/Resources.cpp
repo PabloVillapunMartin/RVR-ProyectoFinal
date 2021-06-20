@@ -16,6 +16,7 @@ vector<Resources::ImageInfo> Resources::images_ {
 		{ Suelo, "resources/images/suelo.png" }, //
 		{ Vida, "resources/images/vida.png" }, //
 		{ Muro, "resources/images/muro.png" }, //
+		{ Muro2, "resources/images/muro2.png" }, //
 		{ Waiting, "resources/images/waiting.png" } //
 };
 

@@ -15,7 +15,8 @@ public:
 		pool_() {
 		for (int i = 0; i < n; i++) {
 			Entity* e = SDLGame::instance()->getManager()->addEntity();
-			e->addComponent<Transform>();
+			Transform* tr = e->addComponent<Transform>();
+			tr->height_ = 8; tr->width_ = 8;
 			e->addComponent<ImageComponent>(SDLGame::instance()->getTextureMngr()->getTexture(Resources::Bullet));
 			e->addComponent<BulletIDPlayer>();
 			e->setVisible(false);

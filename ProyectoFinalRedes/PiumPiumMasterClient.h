@@ -10,6 +10,7 @@ class SDLGame;
 class RenderSystem;
 class GameCtrlSystem;
 class BulletPool;
+class WallInfo;
 
 class PiumPiumMasterClient {
 
@@ -23,8 +24,7 @@ public:
 
 	
 	void createPlayer(int x, int y);
-	void createBullet(int x, int y);
-	void createWalls();
+	void createWall(WallInfo ms);
 	void updateGO(int x, int y, float rot, int id, int type, bool active);
 
 	inline void setID(int id){ idClient_ = id;}

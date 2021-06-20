@@ -41,31 +41,89 @@ void PiumPiumMasterServer::initGame(char* ip, char* port) {
 	
 	pool = new BulletPool(40);
 
-	net_server = new NetworkServer(ip, port);
+	net_server = new NetworkServer(ip, port, this);
 	net_server->start();
 	// // create the systems
 	playerSystem_=mngr_->addSystem<PlayerSystem>();
 	collisionSystem_ = mngr_->addSystem<CollisionSystem>(pool);
 	gameCtrlSystem_ = mngr_->addSystem<GameCtrlSystem>(net_server, pool);
 	bulletSystem_ = mngr_->addSystem<BulletSystem>(net_server, pool);
-	createWalls();
-
+	
 	// pacmanSystem_ = mngr_->addSystem<PacManSystem>();
 	// audioSystem = mngr_->addSystem<AudioSystem>();
 	// strawberrySystem = mngr_->addSystem<StrawberrySystem>();
 }
 
 void PiumPiumMasterServer::createWalls(){
+	//---------------Pared arriba-----------------------
 	Entity* ent = mngr_->addEntity();
 
 	Transform* tr = ent->addComponent<Transform>();
-	tr->position_ = {300, 220};
-	tr->height_ = 40;
-	tr->width_ = 40;
+	tr->position_ = {0, -10};
+	tr->height_ = 10;
+	tr->width_ = _WINDOW_WIDTH_;
 	
-	ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Muro));
 	ent->addToGroup(ecs::_grp_Walls);
 	ent->setVisible(true);
+
+	WallInfo ms(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
+	net_server->broadcastMessage(&ms);
+	//---------------Pared abajo-------------------------
+	ent = mngr_->addEntity();
+
+	tr = ent->addComponent<Transform>();
+	tr->position_ = {0, _WINDOW_HEIGHT_};
+	tr->height_ = 10;
+	tr->width_ = _WINDOW_WIDTH_;
+	
+	ent->addToGroup(ecs::_grp_Walls);
+	ent->setVisible(true);
+
+	WallInfo ms1(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
+	net_server->broadcastMessage(&ms1);
+	//---------------Pared derecha-----------------------
+	ent = mngr_->addEntity();
+
+	tr = ent->addComponent<Transform>();
+	tr->position_ = {-10, 0};
+	tr->height_ = _WINDOW_HEIGHT_;
+	tr->width_ = 10;
+	
+	ent->addToGroup(ecs::_grp_Walls);
+	ent->setVisible(true);
+
+	WallInfo ms2(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
+	net_server->broadcastMessage(&ms2);
+	//---------------Pared izquierda---------------------
+	ent = mngr_->addEntity();
+
+	tr = ent->addComponent<Transform>();
+	tr->position_ = {_WINDOW_WIDTH_, 0};
+	tr->height_ = _WINDOW_HEIGHT_;
+	tr->width_ = 10;
+	
+	ent->addToGroup(ecs::_grp_Walls);
+	ent->setVisible(true);
+
+	WallInfo ms3(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
+	net_server->broadcastMessage(&ms3);
+	//----------------Muro interior derecha---------------------
+	ent = mngr_->addEntity();
+
+	tr = ent->addComponent<Transform>();
+	tr->position_ = {425, 210};
+	tr->height_ = 30;
+	tr->width_ = 140;
+	
+	ent->addToGroup(ecs::_grp_Walls);
+	ent->setVisible(true);
+
+	WallInfo ms4(tr->position_.getX(), tr->position_.getY(), tr->height_,tr->width_);
+	net_server->broadcastMessage(&ms4);
+	//----------------Muro interior izquierda-------------------
+	//----------------Muro interior abajo-----------------------
+	//----------------Muro interior arriba----------------------
+
 }
 
 void PiumPiumMasterServer::closeGame() {
@@ -112,7 +170,6 @@ void PiumPiumMasterServer::start() {
 		net_server->proccessMessages();
 		mngr_->flushMessages();
 
-		std::cout << pool->getNotUsed() << "\n";
 		sendObjectPositions();
 
 		SDL_RenderPresent(game_->getRenderer());

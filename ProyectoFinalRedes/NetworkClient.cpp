@@ -64,7 +64,6 @@ void NetworkClient::proccessMessages(){
             gameClient->createPlayer(start->x2,start->y2);
             gameClient->createPlayer(start->x3,start->y3);
             gameClient->createPlayer(start->x4,start->y4);
-            gameClient->createWalls();
 
 	        SDLGame::instance()->getManager()->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state = GameState::inGame;
 
@@ -75,15 +74,15 @@ void NetworkClient::proccessMessages(){
             gameClient->updateGO(ms->x, ms->y, ms->rotation, ms->go_id, ms->type,ms->active);
             break;
         }
-        case MsgId::_SHOOT_SERVER: {
-            ShootServerMessages* ms = static_cast<ShootServerMessages*>(msg);
-            gameClient->createBullet(ms->x, ms->y);
-            break;
-        }
-          case MsgId::_UPDATE_PLAYER_INFO: {
+        case MsgId::_UPDATE_PLAYER_INFO: {
             UpdatePlayerStateMessage* ms = static_cast<UpdatePlayerStateMessage*>(msg);
             SDLGame::instance()->getManager()->send<msg::UpdatePlayerState>(ms->lives1, ms->points1, ms->lives2, ms->points2,
              ms->lives3, ms->points3,ms->lives4, ms->points4);
+            break;
+        }
+        case MsgId::_WALL_INFO: {
+            WallInfo* ms = static_cast<WallInfo*>(msg);
+            gameClient->createWall(*ms);
             break;
         }
         default:
@@ -129,20 +128,20 @@ void NetworkClient::recieve_thread(){
             messages_.push(ms);
             break;
         }
-        case MsgId::_SHOOT_SERVER: {
-            ShootServerMessages* ms = new ShootServerMessages();
-            ms->from_bin(msData);
-            messages_.push(ms);
-            break;
-        }
         case MsgId::_UPDATE_PLAYER_INFO: {
             UpdatePlayerStateMessage* ms = new UpdatePlayerStateMessage();
             ms->from_bin(msData);
             messages_.push(ms);
             break;
         }
+        case MsgId::_WALL_INFO: {
+            WallInfo* ms = new WallInfo();
+            ms->from_bin(msData);
+            messages_.push(ms);
+            break;
+        }
         default:
-            std::cout << "[Client] Unknown message received\n";
+            std::cout << "[Client] Unknown message received of type " << (size_t)nm.id << "\n";
             break;
         }
 

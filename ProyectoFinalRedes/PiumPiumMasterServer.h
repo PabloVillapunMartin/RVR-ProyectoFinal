@@ -22,11 +22,11 @@ public:
 	// from SDLGame
 	void start();
 	void stop();
+	void createWalls();
 
 private:
 	void initGame(char* ip, char* port);
 	void closeGame();
-	void createWalls();
 
 	void clientGame();
 	void serverGame();

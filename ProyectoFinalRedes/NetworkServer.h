@@ -7,12 +7,14 @@
 #include "NetworkMessages.h"
 #include "Serializable.h"
 
+class PiumPiumMasterServer;
+
 // +------------------------+
 // | Clase para el servidor |
 // +------------------------+
 class NetworkServer {
 public:
-    NetworkServer(const char * s, const char * p): socket(s, p), playersReady(0)
+    NetworkServer(const char * s, const char * p, PiumPiumMasterServer* masterServer): socket(s, p), playersReady(0), gameServer(masterServer)
     {
         socket.bind();
     };
@@ -29,6 +31,9 @@ private:
     bool isAlreadyRegistered(Socket* client);
 
     void recieve_thread();
+
+    //Referencia del juego
+    PiumPiumMasterServer* gameServer;
 
     //Lista de clientes conectados al servidor de Chat, representados por su socket
     std::vector<std::unique_ptr<Socket>> clients;

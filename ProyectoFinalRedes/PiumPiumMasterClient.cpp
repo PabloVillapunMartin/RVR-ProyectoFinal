@@ -159,28 +159,19 @@ void PiumPiumMasterClient::createPlayer(int x, int y){
 	tr->width_= 32; tr->height_ = 32;
 
 }
-void PiumPiumMasterClient::createBullet(int x, int y){
-	Vector2D pos = {x,y};
-	Entity* e = pool->getBullet();
-	if (e != nullptr) {
-		e->setVisible(true);
-		Transform* tr = e->getComponent<Transform>(ecs::Transform);
-		tr->position_= {x,y};
-		tr->height_ = 8; tr->width_=8;
-		//game_->getAudioMngr()->playChannel(Resources::Bullet, 0, 1);
-	}
 
-}
-
-void PiumPiumMasterClient::createWalls(){
+void PiumPiumMasterClient::createWall(WallInfo ms){
 	Entity* ent = mngr_->addEntity();
 
 	Transform* tr = ent->addComponent<Transform>();
-	tr->position_ = {300, 220};
-	tr->height_ = 40;
-	tr->width_ = 40;
+	tr->position_ = {ms.x, ms.y};
+	tr->height_ = ms.height;
+	tr->width_ = ms.width;
 	
-	ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Muro));
+	if(ms.width > ms.height)
+		ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Muro2));
+	else ent->addComponent<ImageComponent>(game_->getTextureMngr()->getTexture(Resources::Muro));
+	
 	ent->addToGroup(ecs::_grp_Walls);
 	ent->setVisible(true);
 }
@@ -200,9 +191,11 @@ void PiumPiumMasterClient::updateGO(int x, int y, float rot, int id, int type, b
 			Entity* ent = pool->getPool()[id];
 			Transform* tr = ent->getComponent<Transform>(ecs::Transform);
 			tr->position_ = {x, y};
-			tr->rotation_ = rot;
+			tr->rotation_ = rot; 
 			if(active == false) 
 				pool->deleteBullet(ent);
+			else 
+				ent->setVisible(active);
 		}
 	}	
 }

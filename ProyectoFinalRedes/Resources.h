@@ -17,6 +17,7 @@ public:
 		Suelo,
 		Vida,
 		Muro,
+		Muro2,
 		Waiting,
 
 		// text

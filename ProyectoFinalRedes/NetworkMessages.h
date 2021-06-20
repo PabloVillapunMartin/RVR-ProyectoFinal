@@ -16,8 +16,8 @@ enum MsgId : msgType {
 	_UPDATE_CLIENT_PLAYER,
 	_UPDATE_GAMEOBJECT,
 	_SHOOT_CLIENT,
-	_SHOOT_SERVER,
 	_UPDATE_PLAYER_INFO,
+	_WALL_INFO,
 	//
 	_last_MsgId_
 };
@@ -160,21 +160,6 @@ public:
 	int x, y, idPlayer;
 	float dirX, dirY;
 };
-//Mensaje de disparo, lo usa el servidor para decirle a los clientes que creen un go "bullet"
-class ShootServerMessages : public NetworkMessage {
-public:
-	ShootServerMessages(int x_, int y_) : NetworkMessage(_SHOOT_SERVER), x(x_), y(y_) {};
-
-	ShootServerMessages() : NetworkMessage(_SHOOT_SERVER) {};
-
-	~ShootServerMessages(){}
-
-	int from_bin(char* data) override;
-
-	void to_bin() override;
-
-	int x, y;
-};
 
 class UpdatePlayerStateMessage : public NetworkMessage{
 public:
@@ -194,4 +179,21 @@ public:
 	int lives2, points2;
 	int lives3, points3;
 	int lives4, points4;
+
+};
+
+class WallInfo : public NetworkMessage{
+public:
+	WallInfo(int x_, int y_, int height_, int weight_) : NetworkMessage(_WALL_INFO), x(x_), y(y_), height(height_), width(weight_) {};
+
+	WallInfo() : NetworkMessage(_WALL_INFO) {};
+
+	~WallInfo(){}
+
+	int from_bin(char* data) override;
+
+	void to_bin() override;
+
+	int x, y;
+	int height, width;
 };

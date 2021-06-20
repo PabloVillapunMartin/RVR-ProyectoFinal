@@ -3,6 +3,7 @@
 #include "Manager.h"
 #include "messages.h"
 #include "GameState.h"
+#include "PiumPiumMasterServer.h"
 #include <mutex>
 
 std::mutex mutServer;
@@ -41,6 +42,7 @@ void NetworkServer::proccessMessages(){
                 std::cout << "[Server] Players ready to play: "<< playersReady << "\n";
 
                 if(playersReady == 4){
+                    gameServer->createWalls();
                     StartGameMessage startGame(40, 40, 600, 40, 40, 440, 600, 440);
                     broadcastMessage(&startGame);
                     SDLGame::instance()->getManager()->getHandler(ecs::_hdlr_GameStateEntity)->getComponent<GameState>(ecs::GameState)->state = GameState::inGame;
